@@ -1,0 +1,99 @@
+<html>
+	<HEAD>
+		<title>Projekt Registerdialog</title>
+		<link rel="stylesheet" type="text/css" href="../programme.css">
+	</HEAD>
+  <BODY>
+		<HR>
+		<center><H1>Registerdialog</H1></center>
+   <center><H1>( CPropertySheet, CPropertyPage )</H1></center>
+		<HR>
+		<H2>Einleitung</H2>
+		Um diese Anleitung nicht zu lang werden zu lassen, schreibe ich immer nur die Dinge auf, die <b>verändert</b> werden müssen. Bei Codeabschnitten werden die Teile, die von mir verändert wurden fett geschrieben.
+		<HR>
+		<H2>Beispiel</H2>
+		<H3>Aufgabe</H3>
+	  <p>
+			<table summary="" width="60%"><tr><td>
+    	Dieses Projekt dient dazu, zu zeigen, wie ein einfacher Registerdialog funktioniert.
+			</td></tr></table>
+		</p>
+    <H3>Lösung in Prosa</H3>
+	<ol>
+  	<li>Um einen einen Registerdialog zu erstellen braucht man zuerst einmal ein paar Seiten. Ich hab 2 gemacht:<br>
+   	<img src="dialoge.jpg" alt="">
+   </li>
+   <li>Für diese Dialoge muss man noch jeweils eine Klasse anlegen. Diese nicht von CDialog sondern von CPropertyPage ableiten:<br>
+   	<img src="dianeu1.jpg" alt=""><br>
+    <img src="dianeu2.jpg" alt="">
+   </li>
+   <li>Nun braucht man nur noch folgenden fett markierten Code dort einfügen, von wo aus der Registerdialog ausgeführt werden soll:<br>
+   	<pre>
+void CPropertyView::OnInitialUpdate()
+{
+	CFormView::OnInitialUpdate();
+	GetParentFrame()->RecalcLayout();
+	ResizeParentToFit();
+
+<b>	// Der folgende Code könnte genauso wo anders ausgeführt werden
+	// zum Beispiel Beim Klick auf einen Button oder auf einen
+	// Menüeintrag
+	
+	// Einen Registerdialog anlegen
+	CPropertySheet sheet;
+
+	// Die Seiten anlegen
+	mypage1 page1;
+	mypage2 page2;
+
+	// Die Seiten zum Registerdialog hinzufügen
+	sheet.AddPage(&page1);
+	sheet.AddPage(&page2);
+
+	// Den Registerdialog modal starten
+	sheet.DoModal();
+	// Programm fortsetzen</b>
+}
+    </pre>
+    Ich hab das hier gleich am Programmanfang gemacht. Man könnte es aber auch als Reaktion auf einen Button tun:<br>
+    <pre>
+void CPropertyView::OnButton1() 
+{
+<b>	// Der folgende Code könnte genauso wo anders ausgeführt werden
+	// zum Beispiel Beim Klick auf einen Button oder auf einen
+	// Menüeintrag
+	
+	// Einen Registerdialog anlegen
+	CPropertySheet sheet;
+
+	// Die Seiten anlegen
+	mypage1 page1;
+	mypage2 page2;
+
+	// Die Seiten zum Registerdialog hinzufügen
+	sheet.AddPage(&page1);
+	sheet.AddPage(&page2);
+
+	// Den Registerdialog modal starten
+	sheet.DoModal();
+	// Programm fortsetzen</b>
+}
+    </pre>
+    In der Datei, in der man den Programmcode zum Aufruf des Registerdialogs geschrieben hat, müssen nur noch die Includes für die 2 Dialogklassen (, die die wir vorher von CPropertyPage abgeleitet haben) hinzugefügt werden:<br>
+    <pre>
+// propertyView.cpp : Implementierung der Klasse CPropertyView
+//
+
+#include "stdafx.h"
+#include "property.h"
+
+#include "propertyDoc.h"
+#include "propertyView.h"
+
+<b>#include "mypage1.h"
+#include "mypage2.h"</b>
+    </pre>
+		<li>Fertig</li>
+	</ol>
+  </BODY>
+</html>

@@ -1,0 +1,197 @@
+<html>
+	<HEAD>
+		<title>Projekt Datenbank 5</title>
+		<link rel="stylesheet" type="text/css" href="../programme.css">
+	</HEAD>
+  <BODY>
+		<HR>
+		<center><H1>Datenbankbeispiel 5</H1></center>
+		<HR>
+		<H2>Einleitung</H2>
+		Um diese Anleitung nicht zu lang werden zu lassen, schreibe ich immer nur die Dinge auf, die <b>verändert</b> werden müssen. Bei Codeabschnitten werden die Teile, die von mir verändert wurden fett geschrieben.
+		<HR>
+		<H2>Beispiel</H2>
+		<H3>Aufgabe</H3>
+	  Es sollten vor Beginn dieses Projekts die Maßnahmen getroffen werden, die im Kapitel "Datenbankzugriff Vorbereitung" angegeben sind.<br>
+	  <BR>
+	  <p>
+			<table summary="" width="60%"><tr><td>
+			<img src="erd.jpg" alt=""><br>
+      <br>
+      Die Datenbank "Nordwind" enthält unter anderem die Tabellen
+      <UL>
+      	<LI>"Bestellungen"</LI>
+        <LI>"Kunden"</LI>
+        <LI>"Personal"</LI>
+      </UL>
+      Erstellen sie ein Programm, welches in einem CTreeCtrl in oberster Ebene jeweils ein Bestelldatum anzeigt, zu dem Bestellungen vorliegen.<br>
+      In der Ebene darunter werden die Firmen der einzelnen Bestellungen angezeigt.<br>
+      Bei Anklicken einer solchen Firma wird in einem modalen Dialog angezeigt:<br>
+      <UL>
+      	<LI>Firmenname	(Kunde)</LI>
+        <LI>Land	(Kunde)</LI>
+        <LI>Bestelldatum	(Bestellung</LI>
+        <LI>Vorname	(Personal)</LI>
+        <LI>Nachname	(Personal)</LI>
+      </UL>
+			</td></tr></table>
+		</p>
+    <H3>Lösung in Prosa</H3>
+	<ol>
+		<li>Zuerst einmal ein neues Projekt anlegen:
+			<ul>
+				<li>Schritt 1 : SDI - Anwendung</li>
+        <li>Schritt 2 : Datenbankansicht ohne Dateiunterstützung<br>
+				<img src="db5.1.jpg" alt=""><br>
+        Auf "Datenquelle" drücken.<br>
+				<img src="db5.2.jpg" alt=""><br>
+        Nun muss die Tabelle ausgewählt werden, die für das Datenbankprojekt gebraucht wird. Es könnten zwar mehrere ausgewählt werden, aber funktioniert dies nicht richtig. Visual C++ meldet beim Starten eines solchen Programms einen mysteriösen :-) Fehler. Deßhalt wähle ich hier nur eine Tabelle aus und füge später weitere hinzu. Diese Methode ist zwar umständlich, funktioniert aber um so besser.<br>
+				<img src="db5.3.jpg" alt=""></li>
+				<li>Schritt 6 : CRecordView<br>
+				<img src="db5.4.jpg" alt=""></li>
+			</ul>
+		</li>
+		<li>Zeichnen des Dialogs:<br>
+    	Es wird nur ein TreeControl benötigt.<br>
+			<img src="db5.5.jpg" alt=""><br><br>
+      Um die Linien und Schaltflächen beim TreeControl zu erhalten, braucht man nur die Eigenschaften zu editieren:<br>
+      <img src="db5.6.jpg" alt="">
+		</li>
+    <li>Es wird noch eine Membervariable für den TreeControl benötigt.<br>
+    	Dazu muss der Klassenassistent geöffnet werden.<br>
+      <img src="db5.7.jpg" alt="">
+    </li>
+    <li>Nun müssen die restlichen Tabellen eingebunden werden und zwar Kunden und Personal. Dazu den Klassenassistent öffnen.<br>
+    Dann alle Membervariablen für die Spalten in der Klasse Cdb5Set löschen und auf den Button "Spalten aktualisieren" drücken.<br>    
+    <img src="db5.8.jpg" alt=""><br>
+    Nun ist die Datenbank noch einmal auszuwählen.<br>
+    <img src="db5.9.jpg" alt=""><br>
+    Hier können nun alle Tabellen markiert werden.<br>
+    <img src="db5.10.jpg" alt=""><br>
+    </li>
+    <li>Es müssen nun im Klassenassistent für die benötigten Spalten in den Tabellen, Variable angelegt werden.<br>
+    	Benötigt werden:<br>
+      <UL>
+      	<LI>Bestelldatum</LI>
+        <LI>Bestellnummer</LI>
+        <LI>Firma</LI>
+        <LI>Kunde.Land</LI>
+        <LI>Nachname</LI>
+        <LI>Vorname</LI>
+      </UL>
+    </li>
+    <li>Nun müssen noch die Namen der Tabellen in den nachfolgenden Funktionsaufruf eingefügt werden.
+    	<pre>
+CString CDb5Set::GetDefaultSQL()
+{
+	return _T("[Bestellungen]<b>,[Personal],[Kunden]</b>");
+}
+      </pre>
+    </li>
+    <li>Um beim Programmstart das TreeControl mit Elementen zu füllen, eignet sich die Methode OnInitalUpdate am Besten.<br>
+    	<pre>
+void CDb5View::OnInitialUpdate()
+{
+	m_pSet = &GetDocument()->m_db5Set;
+	CRecordView::OnInitialUpdate();
+	GetParentFrame()->RecalcLayout();
+	ResizeParentToFit();
+
+<b>	// Nach Bestelldatum sortieren
+	m_pSet->m_strSort = "[Bestellungen].[Bestelldatum]";
+	// Um zu verhindern, dass die Datenbank einfach jeden Datensatz mit jedem
+	// verknüpft (Natural Join), müssen die Verknüpfungen ausgewählt werden,
+	// die einen Sinn ergeben
+	m_pSet->m_strFilter = "[Bestellungen].[Personal-Nr]=[Personal].[Personal-Nr] AND [Bestellungen].[Kunden-Code]=[Kunden].[Kunden-Code]";
+	// Erneutes Laden der Tabellen, um die Sortierung und den Filter
+	// einzuschalten.
+	m_pSet->Requery();
+
+	CTime oldtime;
+	// Solange weitere Datensätze vorhanden
+	while (!m_pSet->IsEOF())
+	{
+		// Zum merken des aktullen Root-Items (Item oberster Ebene)
+		HTREEITEM parent;
+		
+		// Nur wenn neues Root Item gebraucht wird
+		if (oldtime != m_pSet->m_Bestelldatum)
+		{
+			// Neues merken
+			oldtime = m_pSet->m_Bestelldatum;
+			// Neues anlegen
+			parent = m_tree.InsertItem(m_pSet->m_Bestelldatum.Format("%d.%m.%y"));
+		}
+		// Firmenname als Unterelement des aktuellen parent einfügen
+		HTREEITEM item = m_tree.InsertItem(m_pSet->m_Firma,parent);
+		// Merken der eindeutigen Bestellnummer beim Item
+		// damit es später beim Klick Event leichter wieder identifiziert werden kann
+		m_tree.SetItemData(item,m_pSet->m_BestellNummer);
+		// Zum nächsten Datensatz springen
+		m_pSet->MoveNext();
+	}</b>
+}
+      </pre>
+    </li>
+    <li>Dem Programm fehlt nun nur noch ein Dialog in dem bei einem Klick auf einen Eintrag dessen Informationen angezeigt werden. Dazu in den Ressourcen einen neuen Dialog einfügen.<br>
+    	<img src="db5.11.jpg" alt="">
+    </li>
+    <li>Um eine Klasse für diesen Dialog anzulegen braucht nur der Klassenassistent geöffnet werden. Die Frage eine Klasse für den Dialog zu erstellen kann man nun mit ja beantworten. Darauf kann man in einem weiteren Dialog den Klassennamen einstellen.<br>
+    	<img src="db5.12.jpg" alt="">
+    </li>
+    <li>Für die Eingabefelder müssen noch Variable erstellt werden.<br>
+    	<img src="db5.13.jpg" alt="">
+    </li>
+    <li>
+    	Damit die Klasse benutzt werden kann muss sie erst in Datei db5view.cpp eingebunden werden.<br>
+			<pre>
+// db5View.cpp : Implementierung der Klasse CDb5View
+//
+
+#include "stdafx.h"
+#include "db5.h"
+
+#include "db5Set.h"
+#include "db5Doc.h"
+#include "db5View.h"
+
+<b>#include "Dialog.h"</b>
+			</pre>
+    </li>
+    <li>Erstellen eines Handlers für das Anklicken eines Elements im TreeControl.<br>
+    	Die beste Wahl ist hier TVN_SELCHANGED, weil NM_CLICK nicht zielführend ist, weil man nicht erfährt, auf welches Item gedrückt wurde.<br>
+      <img src="db5.14.jpg" alt="">
+    </li>
+    <li>Code für den Handler.<br>
+    	<pre>
+void CDb5View::OnSelchangedTree1(NMHDR* pNMHDR, LRESULT* pResult) 
+{
+	NM_TREEVIEW* pNMTreeView = (NM_TREEVIEW*)pNMHDR;
+
+<b>	if (pNMTreeView != NULL)
+	{
+		if (pNMTreeView->itemNew.lParam != NULL)
+		{
+			// Um Bestellung zu finden
+			m_pSet->m_strFilter.Format("[Bestellungen].[Bestell-Nr] = %d", pNMTreeView->itemNew.lParam);
+			// Um jedes mit jedem Verknüpfung zu verhindern
+			m_pSet->m_strFilter += " AND [Bestellungen].[Personal-Nr]=[Personal].[Personal-Nr] AND [Bestellungen].[Kunden-Code]=[Kunden].[Kunden-Code]";
+			m_pSet->Requery();
+
+			Dialog dia;
+			dia.m_firma = m_pSet->m_Firma;
+			dia.m_land = m_pSet->m_Kunde_Land;
+			dia.m_bestelldatum = m_pSet->m_Bestelldatum.Format("%d.%m.%y");
+			dia.m_vorname = m_pSet->m_Vorname;
+			dia.m_nachname = m_pSet->m_Nachname;
+			dia.DoModal();
+		}
+	}</b>
+	*pResult = 0;
+}
+      </pre>
+    </li>
+		<li>Fertig</li>
+	</ol>
+  </BODY>
+</html>

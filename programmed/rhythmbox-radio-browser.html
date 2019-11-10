@@ -1,0 +1,513 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html lang="en">
+<head>
+<script type="text/javascript">
+/* <![CDATA[ */
+    (function() {
+        var s = document.createElement('script'), t = document.getElementsByTagName('script')[0];
+        
+        s.type = 'text/javascript';
+        s.async = true;
+        s.src = 'http://api.flattr.com/js/0.6/load.js?mode=auto';
+        
+        t.parentNode.insertBefore(s, t);
+    })();
+/* ]]> */
+</script>
+	<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>Radio browser ( shoutcast / icecast ) plugin for Rhythmbox</title>
+	<meta content="segler_alex" name="author">
+	<meta name="robots" content="index,follow">
+	<meta content="Alles rund ums Programmiereren" name="description">
+	<link title="Default" rel="stylesheet" href="/styles/default.css" type="text/css">
+	<link title="Clean Style" rel="alternate stylesheet" href="/styles/clean.css" type="text/css">
+	<link href='http://fonts.googleapis.com/css?family=Tangerine' rel='stylesheet' type='text/css'>
+	<style type="text/css">
+	.menu {
+		position:fixed;
+		left:0px;
+		top:50px;
+		width:220px;
+		border: 2px solid #BBBBBB;
+		padding:5px;
+		background:#fff4c8;
+	}
+	.contentbox {
+		margin-left:235px;
+	}
+	.header {
+		position:fixed;
+		left:0px;
+		top:0px;
+		width:99%;
+		text-align:center;
+		background:#fff4c8;
+		border: 2px solid #BBBBBB;
+		margin: 0px;
+		font-size: 35px;
+	}
+	h2 {
+		font-family: 'Tangerine', serif;
+		font-size: 40px;
+		text-shadow: 4px 4px 4px #aaa;
+		margin:0px;
+	}
+	.spacer {margin:10px;}
+	</style>
+	<link rel="icon" href="radio-browser.png" type="image/png">
+</head>
+<body>
+<div class="menu">
+	<b><a href="http://www.programmierecke.net">Programmierecke</a></b>
+	<ul>
+		<li><a href="#Description">Description</a></li>
+		<li><a href="#News">News</a></li>
+		<li><a href="#Downloads">Downloads</a></li>
+		<li><a href="#Install">Installation Instructions</a></li>
+		<li><a href="#Screenshots">Screenshots</a></li>
+	</ul>
+</div>
+<div class="contentbox">
+<a name="Description">.</a>
+<div class="spacer">&nbsp;</div>
+<div class="header">Radio browser ( shoutcast / icecast ) plugin for Rhythmbox</div>
+<h2>Description (<a href="http://www.programmierecke.net/">back to my homepage</a>)</h2>
+<img align="left" src="radio-browser.png"/><a href="http://www.gnome.org/projects/rhythmbox/" target="_blank">Rhythmbox</a> plugin that shows the radio station lists of icecast (<a href="http://dir.xiph.org/" target="_blank">dir.xiph.org</a>) and shoutcast directly in rhythmbox.<br/>So the user can easily search for internet radio stations in rhythmbox and play them.<br/><br/>
+<h3>Features: (<a href="#Screenshots">Screenshots</a>)</h3>
+
+<ul>
+  <li><a href="http://www.radio-browser.info">www.radio-browser.info</a>, <a href="http://shoutcast.com">Shoutcast</a>, <a href="http://dir.xiph.org/">Icecast</a>, <a href="http://radiotime.com">RadioTime</a> listing</li>
+  <li>Recording of one ore
+more radio streams at a time (Important!!!: You have to install <a href="http://streamripper.sourceforge.net/faq.php">STREAMRIPPER</a> for your distribution to use this!!!!!!!!!!)</li>
+  <li>Country local streams (if you miss your favourite station: please send me an <a href="mailto:segler_alex@web.de">e-mail</a>)</li>
+  <li>Filtering (name, genre, minimal bitrate)</li>
+  <li>Recently played list</li>
+  <li>Icons for local stations</li>
+  <li>Visit homepage of local channels</li>
+  <li>Station info box</li>
+  <li>Bookmark support</li>
+  <li>Public radio station board, so everyone can post new stations (<a href="http://www.radio-browser.info">www.radio-browser.info</a>). the stations can also be voted for.</li>
+</ul>
+<span style="font-weight: bold;">Fork for GTK 3.0:</span>
+<a href="https://github.com/fossfreedom/radio-browser">https://github.com/fossfreedom/radio-browser</a><br/>
+<span style="font-weight: bold;">Known Bugs:</span>
+Please report issues/bugs on: <a href="http://github.com/segler-alex/rhythmbox-radio-browser/issues" target="_blank">http://github.com/segler-alex/rhythmbox-radio-browser/issues</a><br>
+<b>Forum:</b> <a href="http://forum.programmierecke.net/">forum.programmierecke.net</a><br/>
+<ul>
+	<li>The shoutcast server is not very responsive. Sometimes you have to double-click more than once. :(</li>
+	<li>The stations of shoutcast are not downloaded automatically. You have to double click the genres you want, to download them.</li>
+</ul>
+<!--<font color="red">-->
+Please help me translating into your native language! There are 2 ways:<br/>
+<ul>
+	<li>Download <a href="package.pot">package.pot</a>, open it with a text editor and fill in the empty translations. send it back to me by <a href="mailto:segler_alex@web.de">e-mail</a>.</li>
+	<li>Another easy way is using <a href="https://webtranslateit.com/projects/516-rhythmbox-radio-browser">webtranslateit.com</a></li>
+</ul>
+<!--</font>-->
+If you like this plugin so much, that you want to do something nice for me:
+<ul>
+	<li>send me an <a href="mailto:segler_alex@web.de">e-mail</a>, that tells me why you love my plugin. you can also tell me what you would like to have in the next version.</li>
+	<li>send me a book from my <a href="http://www.amazon.de/wishlist/2ZFECBFUG5XY3">amazon wishlist</a></li>
+	<li>donate with flattr: <a class="FlattrButton" style="display:none;" rev="flattr;button:compact;" href="http://www.programmierecke.net/programmed/rhythmbox-radio-browser.html"></a></li>
+	<li>or you can donate a bug with paypal: <div style="vertical-align:middle"><form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+<input type="hidden" name="cmd" value="_s-xclick">
+<input type="hidden" name="encrypted" value="-----BEGIN PKCS7-----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-----END PKCS7-----
+">
+<input type="image" src="https://www.paypal.com/en_GB/i/btn/btn_donate_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online.">
+<img alt="" border="0" src="https://www.paypal.com/de_DE/i/scr/pixel.gif" width="1" height="1">
+</form></div>
+</li>
+</ul>
+
+<div id="osw_rhythmbox-radio-browser"></div>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.3/jquery.min.js" type="text/javascript"></script>
+<script src="http://static.oswatershed.org/js/package_badge.js" type="text/javascript"></script>
+<script>$(document).ready(function(){ package_badge("rhythmbox-radio-browser", "#osw_rhythmbox-radio-browser"); });</script>
+
+<a name="News">&nbsp;</a>
+<div class="spacer">&nbsp;</div>
+<h2>News</h2>
+
+<h3>Release 2.4 (15.Jun 2011)</h3>
+<ul>
+	<li>works in rhythmbox 0.13.3</li>
+	<li>dropped shoutcast support (needs developer id now)</li>
+</ul>
+<table border>
+<tr><th><img src="http://www.ubuntu.com/sites/default/themes/ubuntu10/favicon.ico"/>Ubuntu/<img src="http://www.debian.org/favicon.ico"/>Debian(>=Squeeze)</th><th>Other Linux</th></tr>
+<tr><td><a href="rhythmbox-radio-browser_2.4-1_all.deb">rhythmbox-radio-browser_2.4-1_all.deb</a><br/>
+<a href="rhythmbox-radio-browser.html#Downloads">Ubuntu repository below...</a></td>
+<td><a href="rhythmbox-radio-browser-2.4.tar.gz">rhythmbox-radio-browser-2.4.tar.gz</a><br/>
+<a href="#Installation_Instructions_User">Installation Instructions for tar.gz package</a><br/></td></tr>
+</table>
+
+<h3>Release 2.3.1 (17.Nov 2010)</h3>
+<ul>
+	<li>added stream chooser dialog if station has multiple streams urls</li>
+	<li>updated translations</li>
+	<li>some bugfixes</li>
+</ul>
+<table border>
+<tr><th><img src="http://www.ubuntu.com/sites/default/themes/ubuntu10/favicon.ico"/>Ubuntu/<img src="http://www.debian.org/favicon.ico"/>Debian(>=Squeeze)</th><th>Other Linux</th></tr>
+<tr><td><a href="rhythmbox-radio-browser_2.3.1-1_all.deb">rhythmbox-radio-browser_2.3.1-1_all.deb</a><br/>
+<a href="rhythmbox-radio-browser.html#Downloads">Ubuntu repository below...</a></td>
+<td><a href="rhythmbox-radio-browser-2.3.1.tar.gz">rhythmbox-radio-browser-2.3.1.tar.gz</a><br/>
+<a href="#Installation_Instructions_User">Installation Instructions for tar.gz package</a><br/></td></tr>
+</table>
+
+<h3>Release 2.3 (16.Nov 2010)</h3>
+<ul>
+	<li>new search tab</li>
+	<li>moved board to new server: http://www.radio-browser.info, more to come on this place. please send me ideas! also help with new webpage-style would be appreciated.</li>
+	<li>start page has resizer-handle now</li>
+	<li>some bugfixes</li>
+</ul>
+<table border>
+<tr><th><img src="http://www.ubuntu.com/sites/default/themes/ubuntu10/favicon.ico"/>Ubuntu/<img src="http://www.debian.org/favicon.ico"/>Debian(>=Squeeze)</th><th>Other Linux</th></tr>
+<tr><td><a href="rhythmbox-radio-browser_2.3-1_all.deb">rhythmbox-radio-browser_2.3-1_all.deb</a><br/>
+<a href="rhythmbox-radio-browser.html#Downloads">Ubuntu repository below...</a></td>
+<td><a href="rhythmbox-radio-browser-2.3.tar.gz">rhythmbox-radio-browser-2.3.tar.gz</a><br/>
+<a href="#Installation_Instructions_User">Installation Instructions for tar.gz package</a><br/></td></tr>
+</table>
+
+<h3>Release 2.2.1 (12.Sep 2010)</h3>
+<ul>
+	<li>some bugfixes</li>
+</ul>
+<table border>
+<tr><th><img src="http://www.ubuntu.com/sites/default/themes/ubuntu10/favicon.ico"/>Ubuntu/<img src="http://www.debian.org/favicon.ico"/>Debian(>=Squeeze)</th><th>Other Linux</th></tr>
+<tr><td><a href="rhythmbox-radio-browser_2.2.1-1_all.deb">rhythmbox-radio-browser_2.2.1-1_all.deb</a><br/>
+<a href="rhythmbox-radio-browser.html#Downloads">Ubuntu repository below...</a></td>
+<td><a href="rhythmbox-radio-browser-2.2.1.tar.gz">rhythmbox-radio-browser-2.2.1.tar.gz</a><br/>
+<a href="#Installation_Instructions_User">Installation Instructions for tar.gz package</a><br/></td></tr>
+</table>
+
+<h3>Release 2.2 (12.Sep 2010)</h3>
+<ul>
+	<li>added new start page for quick access of favourites</li>
+	<li>updated translations</li>
+</ul>
+<table border>
+<tr><th><img src="http://www.ubuntu.com/sites/default/themes/ubuntu10/favicon.ico"/>Ubuntu/<img src="http://www.debian.org/favicon.ico"/>Debian(>=Squeeze)</th><th>Other Linux</th></tr>
+<tr><td><a href="rhythmbox-radio-browser_2.2-1_all.deb">rhythmbox-radio-browser_2.2-1_all.deb</a><br/>
+<a href="rhythmbox-radio-browser.html#Downloads">Ubuntu repository below...</a></td>
+<td><a href="rhythmbox-radio-browser-2.2.tar.gz">rhythmbox-radio-browser-2.2.tar.gz</a><br/>
+<a href="#Installation_Instructions_User">Installation Instructions for tar.gz package</a><br/></td></tr>
+</table>
+
+<h3>Release 2.1.4 (11.Sep 2010)</h3>
+<ul>
+	<li>updated translations</li>
+	<li>new translation greek</li>
+</ul>
+<table border>
+<tr><th><img src="http://www.ubuntu.com/sites/default/themes/ubuntu10/favicon.ico"/>Ubuntu/<img src="http://www.debian.org/favicon.ico"/>Debian(>=Squeeze)</th><th>Other Linux</th></tr>
+<tr><td><a href="rhythmbox-radio-browser_2.1.4-1_all.deb">rhythmbox-radio-browser_2.1.4-1_all.deb</a><br/>
+<a href="rhythmbox-radio-browser.html#Downloads">Ubuntu repository below...</a></td>
+<td><a href="rhythmbox-radio-browser-2.1.4.tar.gz">rhythmbox-radio-browser-2.1.4.tar.gz</a><br/>
+<a href="#Installation_Instructions_User">Installation Instructions for tar.gz package</a><br/></td></tr>
+</table>
+
+<h3>Release 2.1.3 (11.Sep 2010)</h3>
+<ul>
+	<li>its works in latest rhythmbox 0.13.1 now</li>
+</ul>
+<table border>
+<tr><th><img src="http://www.ubuntu.com/sites/default/themes/ubuntu10/favicon.ico"/>Ubuntu/<img src="http://www.debian.org/favicon.ico"/>Debian(>=Squeeze)</th><th>Other Linux</th></tr>
+<tr><td><a href="rhythmbox-radio-browser_2.1.3-1_all.deb">rhythmbox-radio-browser_2.1.3-1_all.deb</a><br/>
+<a href="rhythmbox-radio-browser.html#Downloads">Ubuntu repository below...</a></td>
+<td><a href="rhythmbox-radio-browser-2.1.3.tar.gz">rhythmbox-radio-browser-2.1.3.tar.gz</a><br/>
+<a href="#Installation_Instructions_User">Installation Instructions for tar.gz package</a><br/></td></tr>
+</table>
+
+<h3>Release 2.1.2 (19.Jun 2010)</h3>
+<ul>
+	<li>some changes to make it work with debian linux</li>
+</ul>
+<table border>
+<tr><th><img src="http://www.ubuntu.com/sites/default/themes/ubuntu10/favicon.ico"/>Ubuntu/<img src="http://www.debian.org/favicon.ico"/>Debian(>=Squeeze)</th><th>Other Linux</th></tr>
+<tr><td><a href="rhythmbox-radio-browser_2.1.2-1_all.deb">rhythmbox-radio-browser_2.1.2-1_all.deb</a><br/>
+<a href="rhythmbox-radio-browser.html#Downloads">Ubuntu repository below...</a></td>
+<td><a href="rhythmbox-radio-browser-2.1.2.tar.gz">rhythmbox-radio-browser-2.1.2.tar.gz</a><br/>
+<a href="#Installation_Instructions_User">Installation Instructions for tar.gz package</a><br/></td></tr>
+</table>
+
+<h3>Release 2.1.1 (7.Jun 2010)</h3>
+<ul>
+	<li>merged new translations into package</li>
+</ul>
+<table border>
+<tr><th><img src="http://www.ubuntu.com/sites/default/themes/ubuntu10/favicon.ico"/>Ubuntu/<img src="http://www.debian.org/favicon.ico"/>Debian(>=Squeeze)</th><th>Other Linux</th></tr>
+<tr><td><a href="rhythmbox-radio-browser_2.1.1-1_all.deb">rhythmbox-radio-browser_2.1.1-1_all.deb</a><br/>
+<a href="rhythmbox-radio-browser.html#Downloads">Ubuntu repository below...</a></td>
+<td><a href="rhythmbox-radio-browser-2.1.1.tar.gz">rhythmbox-radio-browser-2.1.1.tar.gz</a><br/>
+<a href="#Installation_Instructions_User">Installation Instructions for tar.gz package</a><br/></td></tr>
+</table>
+
+<h3>Release 2.1 (26.May 2010)</h3>
+<ul>
+	<li>new source radiotime</li>
+	<li>gio library dependency is not needed any more, so it should work in debian testing</li>
+	<li>translation updates</li>
+</ul>
+<table border>
+<tr><th><img src="http://www.ubuntu.com/sites/default/themes/ubuntu10/favicon.ico"/>Ubuntu/<img src="http://www.debian.org/favicon.ico"/>Debian(>=Squeeze)</th><th>Other Linux</th></tr>
+<tr><td><a href="rhythmbox-radio-browser_2.1-2_all.deb">rhythmbox-radio-browser_2.1-2_all.deb</a><br/>
+<a href="rhythmbox-radio-browser.html#Downloads">Ubuntu repository below...</a></td>
+<td><a href="rhythmbox-radio-browser-2.1.tar.gz">rhythmbox-radio-browser-2.1.tar.gz</a><br/>
+<a href="#Installation_Instructions_User">Installation Instructions for tar.gz package</a><br/></td></tr>
+</table>
+<h3>Release 2.0 (2.Apr. 2010)</h3>
+<H4>Changes since 1.9</h4>
+<ul>
+	<li>more translations</li>
+	<li>recording streams creates a new tab for each recording</li>
+	<li>recently played entries get removed after a configurable time</li>
+	<li>streamripper overwrites the older file if the newer one with the same title is bigger</li>
+	<li>display station count in each subtree</li>
+	<li>group bitrate by steps of 32 and bigger ones than 512 to invalid</li>
+</ul>
+<table border>
+<tr><th><img src="http://www.ubuntu.com/sites/default/themes/ubuntu10/favicon.ico"/>Ubuntu/<img src="http://www.debian.org/favicon.ico"/>Debian(>=Squeeze)</th><th>Other Linux</th></tr>
+<tr><td><a href="rhythmbox-radio-browser_2.0_i386.deb">rhythmbox-radio-browser_2.0_i386.deb (32bit)</a><br/>
+<a href="rhythmbox-radio-browser_2.0_amd64.deb">rhythmbox-radio-browser_2.0_amd64.deb (64bit)</a><br/>
+<a href="rhythmbox-radio-browser.html#Downloads">Ubuntu repository below...</a></td>
+<td><a href="rhythmbox-radio-browser-2.0.tar.gz">rhythmbox-radio-browser-2.0.tar.gz</a><br/>
+<a href="#Installation_Instructions_User">Installation Instructions for tar.gz package</a><br/></td></tr>
+</table>
+<h3>Release 1.9 (19.Mar. 2010)</h3>
+<H4>Changes since last alpha 1</h4>
+<ul>
+	<li>added german language translation</li>
+	<li>added more error dialogs</li>
+	<li>do not try downloading feeds indefinitly</li>
+</ul>
+<table border>
+<tr><th><img src="http://www.ubuntu.com/sites/default/themes/ubuntu10/favicon.ico"/>Ubuntu/<img src="http://www.debian.org/favicon.ico"/>Debian</th><th>Other Linux</th></tr>
+<tr><td><a href="rhythmbox-radio-browser_1.9_i386.deb">rhythmbox-radio-browser_1.9_i386.deb (32bit)</a><br/>
+<a href="rhythmbox-radio-browser_1.9_amd64.deb">rhythmbox-radio-browser_1.9_amd64.deb (64bit)</a><br/>
+<a href="rhythmbox-radio-browser.html#Downloads">Ubuntu repository below...</a></td>
+<td><a href="rhythmbox-radio-browser-1.9.tar.gz">rhythmbox-radio-browser-1.9.tar.gz</a><br/>
+<a href="#Installation_Instructions_User">Installation Instructions for tar.gz package</a><br/></td></tr>
+</table>
+<h3>Testing Release 1.9 Alpha 1 (9.Mar. 2010)</h3>
+<ul>
+	<li>new view to display search(filter) results</li>
+	<li>rewrite of some parts -> more stability</li>
+	<li>new icon set</li>
+	<li>automatic update of some feeds(icecast, local), if local copy is at least 1 day older than server version</li>
+	<li>station click hitlist on http://segler.bplaced.net</li>
+	<li>new install script, for per user install without need of superuser privileges: ./install.sh</li>
+	<li>special sorting (by bitrate, genre, streamtype, country) for each feed</li>
+	<li>removed right click in tree in favour of buttons in infobox</li>
+</ul>
+<h3>Known Issues</h3>
+<ul>
+	<li>posting new stations to board and voting on stations does not work</li>
+</ul>
+
+<h3>Release 1.8 (1.Nov. 2009)</h3>
+<ul>
+	<li>added public radio station board, so everyone can post new stations. the stations can also be voted for.</li>
+	<li>added homepage links for icecast and shoutcast streams</li>
+	<li>infobox is a little bit fancier now</li>
+</ul>
+<a href="rhythmbox-radio-browser-1.8.tar.gz">rhythmbox-radio-browser-1.8.tar.gz</a><br>
+<a href="#Installation_Instructions">Installation Instructions for tar.gz package</a><br>
+<a href="rhythmbox-radio-browser.html#Downloads">Ubuntu repository below...</a>
+
+<h3>Release 1.7 (14.Oct. 2009)</h3>
+<ul>
+<li>Nicer info box on recording</li>
+  <li>Station info box</li>
+  <li>Icecast streams categorized on the first letter</li>
+  <li>Bookmark support<br>
+  </li>
+</ul>
+<a href="rhythmbox-radio-browser-1.7.tar.gz">rhythmbox-radio-browser-1.7.tar.gz</a><br>
+<a href="rhythmbox-radio-browser.html#Downloads">Ubuntu repository below...</a><br>
+
+<h3>Release 1.6 (13.Oct. 2009)</h3>
+<ul>
+<li>Icons for local stations</li>
+  <li>Visit homepage of local stations with right click<br>
+  </li>
+</ul>
+
+
+<a href="rhythmbox-radio-browser-1.6.tar.gz">rhythmbox-radio-browser-1.6.tar.gz</a><br>
+<a href="rhythmbox-radio-browser.html#Downloads">
+
+Ubuntu repository below...</a><br>
+
+<h3>Release 1.5.1 (11.Oct. 2009)</h3>
+
+<ul>
+<li>BUG: shoutcast streams get added to recently played now<br>
+</li>
+</ul>
+
+<a href="rhythmbox-radio-browser-1.5.1.tar.gz">rhythmbox-radio-browser-1.5.1.tar.gz</a><br>
+<a href="rhythmbox-radio-browser.html#Downloads">
+
+Ubuntu repository below...</a><br>
+
+<h3>Release 1.5 (10.Oct. 2009)</h3>
+<ul>
+  <li>Added recently played list</li>
+  <li>Updates can now be made separately for each of the root items: shoutcast, icecast, local<br>
+  </li>
+</ul>
+
+
+
+
+
+<a href="rhythmbox-radio-browser-1.5.tar.gz">rhythmbox-radio-browser-1.5.tar.gz</a><br>
+<a href="rhythmbox-radio-browser.html#Downloads">
+
+
+
+Ubuntu repository below...</a><br>
+
+<h3>Release 1.4 (8.Oct. 2009)</h3>
+<ul>
+<li>Added country local station list, if you miss your favourite station: please send me an <a href="mailto:segler_alex@web.de">e-mail</a><br>
+</li>
+</ul>
+<a href="rhythmbox-radio-browser-1.4.tar.gz">rhythmbox-radio-browser-1.4.tar.gz</a><br><a href="#Downloads">
+Ubuntu repository below...</a><br>
+
+<h3>Release 1.3.2 (7.Oct. 2009)</h3>
+<ul>
+<li>Streamripper output directory defaults to <a href="http://www.freedesktop.org/wiki/Software/xdg-user-dirs" target="_blank">XDG music dir</a> if possible, if not then "~"<br>
+</li>
+</ul>
+<a href="rhythmbox-radio-browser-1.3.2.tar.gz">rhythmbox-radio-browser-1.3.2.tar.gz</a><br><a href="#Downloads">
+Ubuntu repository below...</a><br>
+
+<h3>Release 1.3.1 (7.Oct. 2009)</h3>
+<ul>
+<li>BUG: retry on shoutcast downloads works again<br>
+</li>
+</ul>
+<a href="rhythmbox-radio-browser-1.3.1.tar.gz">rhythmbox-radio-browser-1.3.1.tar.gz</a><br><a href="#Downloads">
+Ubuntu repository below...</a><br>
+
+<h3>Release 1.3 (7.Oct. 2009)</h3>
+<ul>
+<li>Added streamripper support with right click on stations</li>
+  <li>Streamripper directory can be changed by plugin properties</li>
+  <li>Recording of more than one streams at the same time</li>
+  <li>Recording one stream and listening to another<br>
+  </li>
+</ul>
+
+<a href="rhythmbox-radio-browser-1.3.tar.gz">rhythmbox-radio-browser-1.3.tar.gz</a><br><a href="#Downloads">
+Ubuntu repository below...</a><br>
+
+<h3>Release 1.2 (6.Sept. 2009)</h3>
+
+<ul>
+  <li>Filter works again<br>
+  </li>
+</ul>
+<a href="rhythmbox-radio-browser-1.2.tar.gz">rhythmbox-radio-browser-1.2.tar.gz</a>
+<h3>Release 1.1 (5 Sept. 2009)<br>
+</h3>
+<ul>
+  <li>Moved download button to the toolbar</li>
+  <li>added preferences dialog</li>
+  <li>try download of files more often than once (can be changed in the preferences dialog)</li>
+  <li>list only streams with a minimal bitrate (can be changed in the preferences dialog)<br>
+  </li>
+  <li>bug fixes</li>
+</ul>
+<a href="rhythmbox-radio-browser-1.1.tar.gz">rhythmbox-radio-browser-1.1.tar.gz</a>
+
+<h3>Release 1.0 (4 Sept. 2009)<br>
+</h3>
+
+<ul>
+  <li>This is the new version of this <a href="rhythmbox-icecast.html">plugin</a><br>
+</li>
+  <li>added shoutcast support<br>
+  </li>
+</ul>
+<a href="rhythmbox-radio-browser-1.0.tar.gz">rhythmbox-radio-browser-1.0.tar.gz</a><br>
+<a name="Downloads">&nbsp;</a>
+<div class="spacer">&nbsp;</div>
+<h2>Downloads</h2>
+<table border>
+<tr><th><img src="http://www.ubuntu.com/sites/default/themes/ubuntu10/favicon.ico"/>Ubuntu/<img src="http://www.debian.org/favicon.ico"/>Debian(>=Squeeze)</th><th>Other Linux</th></tr>
+<tr><td><a href="rhythmbox-radio-browser_2.2.1-1_all.deb">rhythmbox-radio-browser_2.2.1-1_all.deb</a><br/>
+<a href="rhythmbox-radio-browser.html#Downloads">Ubuntu repository below...</a></td>
+<td><a href="rhythmbox-radio-browser-2.2.1.tar.gz">rhythmbox-radio-browser-2.2.1.tar.gz</a><br/>
+<a href="#Installation_Instructions_User">Installation Instructions for tar.gz package</a><br/></td></tr>
+</table>
+<br/>
+There is a Ubuntu repository for jaunty 9.04:<br>
+
+<pre id="sources-list-entries" class="wrap">deb <a href="http://ppa.launchpad.net/segler-alex/ppa/ubuntu">http://ppa.launchpad.net/segler-alex/ppa/ubuntu</a> <span id="series-deb">jaunty</span> main <br><br></pre>
+
+There is a Ubuntu repository for karmic 9.10:<br>
+
+
+<pre id="sources-list-entries" class="wrap">deb <a href="http://ppa.launchpad.net/segler-alex/ppa/ubuntu">http://ppa.launchpad.net/segler-alex/ppa/ubuntu</a> karmic main<br><br></pre>
+
+This plugin is in Universe of lucid 10.04: <a href="apt:rhythmbox-radio-browser">install rhythmbox-radio-browser</a><br>
+<pre>apt-get install rhythmbox-radio-browser</pre>
+<br>
+Ubuntu Repository Key:<br>
+<pre>sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 299F9883</pre>
+<br>
+
+Ubuntu package repository: <a target="_blank" href="https://launchpad.net/%7Esegler-alex/+archive/ppa">https://launchpad.net/~segler-alex/+archive/ppa</a><br>
+
+Git source repository: <a target="_blank" href="https://github.com/segler-alex/rhythmbox-radio-browser">http://github.com/segler-alex/rhythmbox-radio-browser</a><br>
+<a name="Install">&nbsp;</a>
+<div class="spacer">&nbsp;</div>
+<h2><a name="Installation_Instructions"></a>Installation Instructions (Version 1.8 and earlier)</h2>
+<b>The tar.gz packages relies on GNU Make. If you don't have make installed you have to install it:</b><br/>
+<i>Ubuntu or Debian:</i><br/>
+<pre>
+sudo apt-get install make
+</pre>
+<i>Gentoo:</i><br/>
+<pre>
+emerge make
+</pre>
+
+<br/>
+<b>Then to in install my plugin:</b>
+<pre>
+wget http://programmierecke.net/programmed/rhythmbox-radio-browser-1.8.tar.gz
+tar -zxf rhythmbox-radio-browser-1.8.tar.gz
+cd rhythmbox-radio-browser-1.8
+sudo make install
+</pre>
+<h2><a name="Installation_Instructions_User"></a>Installation Instructions (Version 1.9 Alpha 1 and later)</h2>
+<pre>
+wget http://programmierecke.net/programmed/rhythmbox-radio-browser-1.9.tar.gz
+tar -zxf rhythmbox-radio-browser-1.9.tar.gz
+cd rhythmbox-radio-browser-1.9
+./install.sh
+</pre>
+
+<h2>Contribute</h2>
+E-Mail: <a href="mailto:segler_alex@web.de">segler_alex@web.de</a><br>
+<a name="Screenshots">&nbsp;</a>
+<div class="spacer">&nbsp;</div>
+<h2>Screenshots</h2>
+<h3>Version 1.9 (with german translation)</h3>
+<img width="95%" src="rhythmbox-radio-browser-1.9.jpg"><br>
+
+<h3>Version 1.7</h3>
+<img width="95%" src="rhythmbox-radio-browser-1.7.jpg"><br>
+
+<h3>Version 1.4</h3>
+<img width="95%" src="rhythmbox-radio-browser-1.4.jpg"><br>
+
+<h3>Version 1.0</h3>
+<img width="95%" src="rhythmbox-radio-browser-1.0.jpg">
+</div>
+</body></html>

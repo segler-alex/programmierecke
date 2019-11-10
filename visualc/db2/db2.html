@@ -1,0 +1,65 @@
+<html>
+	<HEAD>
+		<title>Projekt Datenbank 2</title>
+		<link rel="stylesheet" type="text/css" href="../programme.css">
+	</HEAD>
+  <BODY>
+		<HR>
+		<center><H1>Datenbankbeispiel 2</H1></center>
+		<HR>
+		<H2>Einleitung</H2>
+		Um diese Anleitung nicht zu lang werden zu lassen, schreibe ich immer nur die Dinge auf, die <b>verändert</b> werden müssen. Bei Codeabschnitten werden die Teile, die von mir verändert wurden fett geschrieben.
+		<HR>
+		<H2>Beispiel</H2>
+		<H3>Aufgabe</H3>
+	  Suchen Sie mit dem Explorer die MS-Beispieldatenbank "Nordwind". Es kann sein, dass diese nicht installiert ist.<BR>
+	  <BR>
+	  Erstellen Sie ein Programm, welches in eine Listbox eines Dialoges von den Sätzen der Tabelle "Artikel" die Felder "Artikelnummer" und "Artikelname" einträgt.
+		<H3>Lösung in Prosa</H3>
+		<ol>
+			<li>Zuerst einmal ein neues Projekt anlegen:
+				<ul>
+					<li>Schritt 1 : SDI - Anwendung</li>
+  	      <li>Schritt 2 : Datenbankansicht ohne Dateiunterstützung<br>
+					<img src="db2.1.jpg" alt=""><br>
+        	Auf "Datenquelle" drücken.<br>
+					<img src="db2.2.jpg" alt=""><br>
+					<img src="db2.3.jpg" alt=""></li>
+					<li>Schritt 6 : CRecordView<br>
+					<img src="db2.4.jpg" alt=""></li>
+				</ul>
+			</li>
+			<li>Zeichnen des Dialogs:<br>
+    	Es wird nur ein Listenfeld gebraucht.<br>
+				<img src="db2.5.jpg" alt=""></img>
+			</li>
+    	<li>Nun müssen nur noch die Eingabefelder mit den Feldern in der Datenbank verbunden werden.<br>
+  	  	Dazu muss der Klassenassistent geöffnet werden.<br>
+	      <img src="db2.6.jpg" alt="">
+  	  </li>
+	    <li>Nun muss die Listbox noch mit den Daten befüllt werden. Dies muss in einer Funktion geschehen, die gleich am Anfang des Programms aufgerufen wird. Dazu ist die Methode "OnInitialUpdate" in der View am Besten geeignet.<br>
+    		<pre>
+void CDb2View::OnInitialUpdate()
+{
+	m_pSet = &GetDocument()->m_db2Set;
+	CRecordView::OnInitialUpdate();
+	GetParentFrame()->RecalcLayout();
+	ResizeParentToFit();
+
+<b>	// Wird für die Formatierung des Strings gebraucht
+	CString zwsp;
+	// Auf erste Position setzen
+	m_pSet->MoveFirst();
+	while (!m_pSet->IsEOF())
+	{
+		zwsp.Format("%d, %s",m_pSet->m_Artikel_Nr,m_pSet->m_Artikelname);
+		m_list.AddString(zwsp);
+		m_pSet->MoveNext();
+	}</b>
+}
+  	    </pre>
+	    </li>
+			<li>Fertig</li>
+		</ol>
+  </BODY>
+</html>

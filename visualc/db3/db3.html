@@ -1,0 +1,93 @@
+<html>
+	<HEAD>
+		<title>Projekt Datenbank 3</title>
+		<link rel="stylesheet" type="text/css" href="../programme.css">
+	</HEAD>
+  <BODY>
+		<HR>
+		<center><H1>Datenbankbeispiel 3</H1></center>
+		<HR>
+		<H2>Einleitung</H2>
+		Um diese Anleitung nicht zu lang werden zu lassen, schreibe ich immer nur die Dinge auf, die <b>verändert</b> werden müssen. Bei Codeabschnitten werden die Teile, die von mir verändert wurden fett geschrieben.
+		<HR>
+		<H2>Beispiel</H2>
+		<H3>Aufgabe</H3>
+	  Suchen Sie mit dem Explorer die MS-Beispieldatenbank "Nordwind". Es kann sein, dass diese nicht installiert ist.<BR>
+	  <BR>
+	  <p>
+			<table summary="" width="60%"><tr><td>
+			Erstellen Sie ein Programm, das die Attribute "Artikelnummer" und "Artikename" der Tabelle "Artikel" in einem CListCtrl anzeigt.<br>
+			Wird eine Zahl in das Editfeld eingegeben und mit "Show" bestätigt, werden nur noch die Datensätze angezeigt, bei denen das Attribut "Bestellte Menge" gleich dem eingegebenen Wert ist.
+			</td></tr></table>
+		</p>
+    <H3>Lösung in Prosa</H3>
+	<ol>
+		<li>Zuerst einmal ein neues Projekt anlegen:
+			<ul>
+				<li>Schritt 1 : SDI - Anwendung</li>
+        <li>Schritt 2 : Datenbankansicht ohne Dateiunterstützung<br>
+				<img src="db3.1.jpg" alt=""><br>
+        Auf "Datenquelle" drücken.<br>
+				<img src="db3.2.jpg" alt=""><br>
+        Nun muss die Tabelle ausgewählt werden, die für das Datenbankprojekt gebraucht wird.<br>
+				<img src="db3.3.jpg" alt=""></li>
+				<li>Schritt 6 : CRecordView<br>
+				<img src="db3.4.jpg" alt=""></li>
+			</ul>
+		</li>
+		<li>Zeichnen des Dialogs:<br>
+    	Es werden nur eine Listbox, ein Eingabefeld und ein Button benötigt.<br>
+			<img src="db3.5.jpg" alt=""><br>
+		</li>
+    <li>Nun müssen nur noch die Eingabefelder mit den Feldern in der Datenbank verbunden werden.<br>
+    	Dazu muss der Klassenassistent geöffnet werden.<br>
+      <img src="db3.6.jpg" alt="">
+    </li>
+    <li>Nun muss die Listbox noch mit den Daten befüllt werden, wenn auf den Button "Show" gedrückt wird. Hierfür muss ein Handler im Klassenassistenten erstellt werden. Oder man macht einfach in der Ressourcenansicht einen Doppelklick auf den Button und bestätigt die Erstellung mit "OK".<br>
+    	<pre>
+<b>void CDb3View::OnButton1() 
+{
+	// Zwischenspeicher für das Formatieren des Strings
+	// und Konvertierung einer Int-Zahl in einen CString
+	CString zwsp;
+
+	// Kopieren der in dem Editfeld angezeigten Information
+	// in die dazugehörige Klassenvariable
+	UpdateData();
+	// Löschen vorheriger Einträge der Listbox
+	m_list.ResetContent();
+
+	// Öffnen der DB wenn sie noch nicht offen ist
+	// wird normalerweise nicht gebraucht
+	// aber zur Sicherheit :-)
+	if (!m_pSet->IsOpen())
+		m_pSet->Open();
+
+	// Da ich nur die Datensätze anzeigen möchte, dessen Attribut
+	// "BestellteEinheiten" gleich der Zahl ist, die man in das Editfeld
+	// eingegeben hat, muss ein Filter aktiviert werden.
+	// Dieser ist nur eine CString Membervariable der Klasse CRecordSet
+	// und beinhaltet eigentlich nur den Teil der SQL-Klausel, die nach dem
+	// Schlüssenwort "Where" folgt
+	m_pSet->m_strFilter.Format("[BestellteEinheiten]=%d",m_zahl);
+	// Das CRecordSet muss nun unter Anwendung des Filters noch einmal
+	// neu geladen werden, damit der Filter Wirkung zeigt
+	m_pSet->Requery();
+
+	// Solange, bis kein weiteres Element in der Tabelle angekommen
+	while (!m_pSet->IsEOF())
+	{
+		// Den in die Listbox zu schreibenden String zusammenstellen
+		zwsp.Format("%d; %s",m_pSet->m_Artikel_Nr,m_pSet->m_Artikelname);
+		// String zur Listbox hinzufügen
+		m_list.AddString(zwsp);
+		// Zum nächsten Datensatz im CRecordSet springen
+		m_pSet->MoveNext();
+	}
+}</b>
+      </pre>
+    </li>
+		<li>Fertig</li>
+	</ol>
+  </BODY>
+</html>

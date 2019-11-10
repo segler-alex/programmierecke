@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html lang="en">
+<head>
+  <meta content="text/html; charset=UTF-8" http-equiv="content-type"><title>Programmierecke.NET - The Source of Programming Information</title>
+  <meta content="segler_alex" name="author">
+  <meta name="robots" content="index,follow">
+  <meta content="Alles rund ums Programmiereren" name="description">
+</head>
+<body>
+<h1>Python plugins</h1>
+This is <a href="http://www.programmierecke.net">www.programmierecke.net</a>, section <a href="http://www.programmierecke.net/howto/">howto</a>, feedback to: <a href="mailto:segler_alex@web.de">segler_alex AT web DOT de</a><br/>
+<a href="python-plugins.tar.gz">Download</a> the files below all in one.
+<h2>main.py</h2>
+<pre>
+import imp
+import pkgutil
+import os
+import sys
+
+from plugins.interface import PluginInterface
+plugin_path = "plugins/"
+
+#for loader,name,ispkg in pkgutil.iter_modules(plugin_path):
+for name in ["plugin1","plugin2"]:
+    print name
+    file, pathname, desc = imp.find_module(name, [plugin_path,])
+    module = imp.load_module(name, file, pathname, desc)
+    
+    module.func1()
+
+for i in  PluginInterface.__subclasses__():
+    c = i()
+    c.func2()
+</pre>
+<h2>plugins/interface.py</h2>
+<pre>
+class PluginInterface(object):
+    def func1(self):
+        raise NotImplementedError
+    
+    def func2(self):
+        raise NotImplementedError
+</pre>
+<h2>plugins/plugin1.py</h2>
+<pre>
+from plugins.interface import PluginInterface
+
+class plugin1cl(PluginInterface):
+    def func1(self):
+	print "method1 of plugin 1"
+
+    def func2(self):
+	print "method2 of plugin 1"
+
+def func1():
+    print "func1 of plugin 1"
+</pre>
+<h2>plugins/plugin2.py</h2>
+<pre>
+from plugins.interface import PluginInterface
+
+class plugin2cl(PluginInterface):
+    def func1(self):
+	print "method1 of plugin 2"
+
+    def func2(self):
+	print "method2 of plugin 2"
+
+def func1():
+    print "func1 of plugin 2"
+</pre>
+
+</body>
+</html>

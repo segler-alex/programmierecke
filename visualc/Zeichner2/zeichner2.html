@@ -1,0 +1,195 @@
+<html>
+<head>
+<title>Projekt Zeichner</title>
+<link rel="stylesheet" type="text/css" href="../programme.css">
+</head>
+<HR>
+<center><H1>Zeichnen mit MFC Erweiterung 1</H1></center>
+<HR>
+<H2>Einleitung</H2>
+Um diese Anleitung nicht zu lang werden zu lassen, schreibe ich immer nur die Dinge auf, die <b>verändert</b> werden müssen. Bei Codeabschnitten werden die Teile, die von mir verändert wurden fett geschrieben.
+<HR>
+<H2>Beispiel</H2>
+<H3>Aufgabe</H3>
+Das Programm Zeichner soll so erweitert werden, dass jeder Strich mit der aktuell gesetzten Zeichenfarbe und mit der aktuellen Liniendicke gezeichnet wird. Anfangs ist die Farbe schwarz und die Liniendicke 1. Die Farbe kann mittels eines schon definierten Dialogs geändert werden können (das heißt den gibts schon, muss nor noch verwendet werden). Für die Strichdicke soll ein eigener modaler Dialog existieren, in dem sie geänder werden kann.
+<H3>Lösung in Prosa</H3>
+<ol>
+<li>Zuerst müssen Variablen für die Farbe und die Liniendicke angelegt werden.(Zusätzlich zu Start- und Endpunkt)<br>
+Mit der rechten Maustaste auf die Klasse CZeichnerView drücken und Member-Variable hinzufügen... auswählen.
+Für die Farben braucht man den Variablentyp COLORREF und als Name für die Variable nehmen wir am Besten strichfarbe.
+Das Ganze nun noch ein zweiter Mal für die Strichdicke : Variablentyp=int Name=strichdicke.
+</li>
+<br><img src="prdraw2.1.jpg">
+<li>Nun müssen die Variablen noch initialisiert werden. Dies macht man im Konstruktor der Klasse CZeichnerView. Wie man den findet steht im ersten Dokument für den Zeichner.
+<br>Der müsste dann ungefähr so aussehen:
+<pre>
+CZeichnerView::CZeichnerView()
+{
+	// ZU ERLEDIGEN: Hier Code zur Konstruktion einfügen,
+	startpunkt = CPoint(0,0);
+	endpunkt = CPoint(0,0);
+
+	<b>strichdicke = 1;
+	// auf Schwarz setzen
+	strichfarbe = RGB(0,0,0);</b>
+}
+</pre></li>
+<li>Nun muss die Farbe auch geändert werden können. Dazu verwendet man am Besten den schon vordefinierten Dialog CColorDialog.
+Zuerst brauchen wir aber einen Button in der Symbolleiste für den Dialog.<br>
+Im Visual C++ auf der linken Seite von der Ansicht der Klassen auf die Ansicht der Ressourcen wechseln. Dann auf Toolbar doppelt klicken und auf IDR_MAINFRAME doppelt klicken. Es öffnet sich ein Fenster, in dem ein Symbol hinzugefügt werden kann.
+Nun auf das letzte, leere Symbol klicken und etwas zeichnen.
+<br><img src="prdraw2.2.jpg">
+Nun wieder auf das letzte, nun nicht mehr leere Symbol doppelt klicken. -> es öffnet sich ein Dialogfeld, in dem man dem Button einen Namen geben kann.
+<br><img src="prdraw2.3.jpg">
+</li>
+<li>Der Button braucht noch einen Handler, der aufgerufen wird, wenn der Button gedrückt wird.<br>
+Ansicht -> Klassen-Assistent<br>
+In der Drop-Down Liste : Klassenname muss CZeichnerView ausgewählt werden, weil der Handler in diese Klasse gehört, weil sich dort auch die Daten befinden, die mit ihm manipuliert werden sollen.
+<br><img src="prdraw2.4.jpg"><br>
+Funktion hinzufügen... -> OK -> Code bearbeiten...
+</li>
+<li>
+Nun befindet man sich direkt beim Handler. Der sollte nun den Dialog aufrufen und wenn der Dialog mit OK bestätigt wird die aktuelle Farbe auf die ausgewählte ändern.
+Der Handler sollte dann so aussehen:
+<pre>
+void CZeichnerView::OnFarbendialog() 
+{
+	// TODO: Code für Befehlsbehandlungsroutine hier einfügen
+	
+	<b>CColorDialog dia;
+
+	// Dialog modal ausführen
+	if (dia.DoModal() == IDOK)
+	{
+		// Wenn OK gedrückt wurde aktuelle Farbe ändern
+		strichfarbe = dia.GetColor();
+	}</b>
+}
+</pre>
+</li>
+<li>
+Jetzt muss die Farbe noch vor jedem Zeichnen eines Striches eingestellt werden. (Visual C++ weiß noch nichts von der Farbänderung)
+Dazu muss der Funktion OnDraw der Klasse CZeichnerView noch ein bisschen Code hinzugefügt werden.<br>
+Die Funktion sollte dann so aussehen:
+<pre>
+void CZeichnerView::OnDraw(CDC* pDC)
+{
+	CZeichnerDoc* pDoc = GetDocument();
+	ASSERT_VALID(pDoc);
+
+<b>	CPen *oldpen,*newpen;
+
+	// Neuen Zeichenstift anlegen
+	newpen = new CPen(PS_SOLID,strichdicke,strichfarbe);
+	// Neuen Stift einstellen, alten merken
+	oldpen = pDC->SelectObject(newpen);</b>
+
+	// Verschiebe Grafikcursor zu Position startpunkt (ohne zu zeichnen)
+	pDC->MoveTo(startpunkt);
+	// Zeichne Linie zum endpunkt
+	pDC->LineTo(endpunkt);
+
+<b>	// wieder alten Stift einstellen
+	pDC->SelectObject(oldpen);
+	// neuen Stift wieder löschen
+	delete newpen;</b>
+
+	// ZU ERLEDIGEN: Hier Code zum Zeichnen der ursprünglichen Daten hinzufügen
+}
+</pre>
+</li>
+<li>Nun funktionert das ändern der Farbe. (Kann schon ausprobiert werden :-) Jetzt brauche wir noch einen modalen Dialog für das ändern der Strichdicke. (den muss man jetzt selber machen)<br>
+<br>->Dazu wieder auf die Ansicht der Ressourcen wechseln.<br>-> Dort auf Dialog doppelt klicken und dann mit rechten Maustaste auf Dialog klicken.<br>-> Auf Dialog einfügen klicken.
+<br>Es kommt nun ein leerer Dialog mit dem Namen IDD_DIALOG1 hinzu.
+</li>
+<img src="prdraw2.5.jpg">
+<li>-> Ein neues Steuerelement 'Text' einfügen<br>
+-> mit der rechten Maustaste darauf klicken, Eigenschaften anklicken<br>
+-> Einen anderen Titel eingeben<br>
+<img src="prdraw2.6.jpg">
+</li>
+<li>-> Ein neues Steuerelement 'Eingabefeld' einfügen<br>
+-> mit der rechten Maustaste darauf klicken, Eigenschaften anklicken<br>
+-> Einen anderen Namen geben<br>
+<img src="prdraw2.7.jpg"><br>
+Nun sollte man dem Dialog noch einen anderen Namen geben:<br>
+-> mit der rechten Maustaste auf die Titelleiste des Dialogs klicken<br>
+-> Eigenschaften<br>
+-> Namen ändern<br>
+-> Titel ändern<br>
+<img src="prdraw2.8.jpg">
+Der Dialog sollte in etwa so aussehen:<br>
+<img src="prdraw2.9.jpg">
+</li>
+<li>
+Nun braucht man noch eine Klasse für den Dialog.<br>
+-> Ansicht -> Klassen-Assistent...
+-> es öffnet sich automatisch der folgende Dialog
+-> einfach auf OK klicken
+<img src="prdraw2.10.jpg">
+</li>
+<li>
+Die Klasse braucht noch einen Namen. Ich hab sie StrichKlasse genannt.<br>
+-> Name eingeben<br>
+-> auf OK klicken<br>
+<img src="prdraw2.11.jpg"><br>
+-> auf Member Variablen klicken<br>
+<img src="prdraw2.12.jpg"><br>
+->Member Variable für das Eingabefeld (IDC_STRICHDICKE) hinzufügen<br>
+<img src="prdraw2.13.jpg"><br>
+-> Den Klassen-Assistenten mit OK verlassen
+</li>
+<li>Es wird noch ein Button für diesen Dialog gebraucht.
+-> Wieder auf die Ressourcenansicht wechseln<br>
+-> Toolbar -> IDR_MAINFRAME<br>
+-> neues Symbol zeichnen<br>
+-> Symbol neuen Namen geben z.B.: ID_STRICHDICKE
+</li>
+<li>Jetzt muss noch die Datei, in der sich die Klasse für den Dialog befindet in der Datei CZeichnerView.cpp ganz oben includiert werden:
+<pre>
+// ZeichnerView.cpp : Implementierung der Klasse CZeichnerView
+//
+
+#include "stdafx.h"
+#include "Zeichner.h"
+
+#include "ZeichnerDoc.h"
+#include "ZeichnerView.h"
+<b>#include "StrichDialog.h"</b>
+
+#ifdef _DEBUG
+#define new DEBUG_NEW
+#undef THIS_FILE
+static char THIS_FILE[] = __FILE__;
+#endif
+</pre>
+</li>
+<li>Ein Handler für den Button...<br>
+-> Ansicht -> Klassen-Assistent...<br>
+-> Klassenname muss CZeichnerView sein<br>
+-> Funktion hinzufügen<br>
+-> Code bearbeiten<br>
+<img src="prdraw2.14.jpg">
+</li>
+<li>Handler sollte so aussehen:
+<pre>
+void CZeichnerView::OnStrichdicke() 
+{
+<b>	// TODO: Code für Befehlsbehandlungsroutine hier einfügen
+	StrichDialog dia;
+
+	// Alten Wert anzeigen
+	dia.m_strichdicke = strichdicke;
+
+	// Dialog ausführen
+	if (dia.DoModal() == IDOK)
+	{
+		// Wenn OK gedrückt wurde neuen Wert benutzen
+		strichdicke = dia.m_strichdicke;
+	}</b>
+}
+</pre>
+</li>
+<li>Fertig</li>
+</ol>
+</html>

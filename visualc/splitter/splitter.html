@@ -1,0 +1,273 @@
+<html>
+	<HEAD>
+		<title>Projekt Datenbank 5</title>
+		<link rel="stylesheet" type="text/css" href="../programme.css">
+	</HEAD>
+  <BODY>
+		<HR>
+		<center><H1>Datenbankbeispiel "Splitter"</H1></center>
+		<HR>
+		<H2>Einleitung</H2>
+		Um diese Anleitung nicht zu lang werden zu lassen, schreibe ich immer nur die Dinge auf, die <b>verändert</b> werden müssen. Bei Codeabschnitten werden die Teile, die von mir verändert wurden fett geschrieben.
+		<HR>
+		<H2>Beispiel</H2>
+		<H3>Aufgabe</H3>
+	  Es sollten vor Beginn dieses Projekts die Maßnahmen getroffen werden, die im Kapitel "Datenbankzugriff Vorbereitung" angegeben sind.<br>
+	  <BR>
+	  <p>
+			<table summary="" width="60%"><tr><td>
+      Bentutzen Sie diese <a href="splitterdb.exe">Datenbank</a> und erstellen sie eine Benutzer- oder System-DSN im ODBC Manager in der Systemsteuerung mit dem Namen "splitter".<br>
+      Wie das geht steht <a href="../db/db.html">hier</a>.<br>
+ 					<img src="erd.jpg" alt=""><br>
+      Erstellen Sie eine Visual Anwendung, welche in einem geteilten Fenster (Splitter Window) diese Datenbank in 4 Ansichten zeigt:<br><br>
+      <u>Inhalte der Ansichten:</u>
+      <OL>
+      	<LI>(links, oben) ermöglicht das Durchblättern und Editieren der Kundentabelle<br>
+       (Editfelder für die Attribute, Push-Buttons für<br>
+       <table summary="" width="80%">
+						<tr>
+							<td width="20%"><b>Button</b></td>
+							<td><b>Bedeutung</b></td>
+						</tr>
+						<tr>
+							<td width="20%">Vor</td>
+							<td>1 Satz weiterblättern</td>
+						</tr>
+						<tr>
+							<td width="20%">Zurück</td>
+							<td>1 Satz zurückblättern</td>
+						</tr>
+						<tr>
+							<td width="20%">Löschen</td>
+							<td>angezeigten Satz löschen</td>
+						</tr>
+						<tr>
+							<td width="20%">Hinzufügen</td>
+							<td>dargestellten Satz hinzufügen</td>
+						</tr>
+						<tr>
+							<td width="20%">Update</td>
+							<td>aktellen Satz mit dargestellten Daten überschreiben</td>
+						</tr>
+						</table>
+       </LI>
+       <LI>(rechts, oben) ermöglicht dieselben Operationen mit Adresstabelle</LI>
+       <LI>(links, unten) ermöglicht dieselben Operationen mit Ländertabelle</LI>
+       <LI>stellt Join-Daten dar:<br>
+       <UL type="disc">
+       	<LI>Kunde : Name</LI>
+        <LI>Adresse : Strasse, Hausnummer</LI>
+        <LI>Land : Name</LI>
+       </UL>
+       In dieser Ansicht kann man einen Kundennamen eingeben, durch Bestätigung der Eingabe mittels Push-Button werden die restlichen Daten des Kunden dargestellt.       
+       </LI>
+      </OL>
+      Bei Eingabe in den jeweiligen Ansichten ist zu prüfen, ob zu den eingegebenen Fremdschlüsseln die entsprechenden Einträge in der referenzierten Tabelle existieren.
+			</td></tr></table>
+		</p>
+    <H3>Lösung in Prosa</H3>
+    Ich erkläre nicht mehr alle Einzelheiten wie zum Beispiel anlegen der Membervariablen für die Controls, also aufpassen. :-)
+	<ol>
+		<li>Zuerst einmal ein neues Projekt anlegen:
+			<ul>
+				<li>Schritt 1 : SDI - Anwendung</li>
+	   <li>Schritt 2<br>
+					<img src="schritt2.jpg" alt="">    	       
+				</li>
+				<li>Schritt 6 : Ändern der Namen der Klassen wenn beliebt :-)<br>
+     	CSplitterView -> DAdresse(Name der gewählten Tabelle)<br>
+      CSplitterSet -> RAdresse(Name der gewählten Tabelle)<br>
+	   	<img src="schritt6.jpg" alt="">
+     </li>
+			</ul>
+    <li>Erstellen einer Klasse, abgeleitet von CRecordSet, für jede Tabelle außer für die, die schon beim Erstellen des Projekts angegeben wurde. (Für die gibts ja schon eine Klasse)
+    	<br>
+	   Ich beschreibe es hier am Beispiel der Tabelle Adresse<br>
+  	  <img src="rec1.jpg" alt=""><br>
+				<img src="rec2.jpg" alt=""><br>
+	 	 <img src="rec3.jpg" alt="">
+    </li>
+   <li>Erstellen einer von CRecordSet abgeleiteten Klasse, die alle 3 Tabellen vereint. (Join) Dazu wieder neue Klasse erstellen und bei in dem Fenster, in dem man die jeweilige Tabelle auswählen kann, einfach alle 3 auswählen.</li>
+   <li>Erstellen von 4 Dialogen im Dialogeditor. Hier am Beispiel Adresse.<br>
+   	<img src="view1.jpg" alt=""><br>
+    Aber aufpassen:<br>
+    In den Eigenschaften der Dialoge muss bei Stil : Untergeordnet ausgewählt werden, sonst gibt das Programm beim Start eine ASSERT-Fehlermeldung aus.<br>
+    <img src="view2.jpg" alt="">
+   </li>
+   <li>Erstellen der Ansichten (Views) für jede von CRecordSet abgeleitete Klasse.<br>
+   	Das sind insgesamt wieder 4 Klassen. Hier wieder am Beispiel der Tabelle Adresse.<br>
+		 <img src="dia1.jpg" alt=""><br>
+			<img src="dia2.jpg" alt=""><br>
+			<img src="dia3.jpg" alt=""><br>
+		</li>
+   <li>Nun müssen die Views noch eingetragen werden. Dazu braucht man eine neue Methode, die man am besten mit dem Klassenassistenten erstellt.<br>
+	   <img src="client1.jpg" alt="">
+   </li>
+   <li>In der Datei, in der sich die gerade erstellten Methode befindet, folgende Dateien Inkludieren:<br>
+	  <pre>
+// MainFrm.cpp : Implementierung der Klasse CMainFrame
+//
+
+#include "stdafx.h"
+#include "splitter.h"
+
+#include "MainFrm.h"
+<b>//Die Dokumentklasse
+#include "SplitterDoc.h"
+//Die 4 View Klassen
+#include "DKunde.h"
+#include "DLand.h"
+#include "DJoin.h"
+#include "DAdresse.h"</b>
+  		</pre>
+   </li>
+   <li>Eine Variable vom Typ CSplitterWnd zur Mainframe Klasse hinzufügen ( bei mir m_wndSplitter ) und die Methode OnClientCreate abändern:<br>
+   	<pre>
+BOOL CMainFrame::OnCreateClient(LPCREATESTRUCT lpcs, CCreateContext* pContext) 
+{
+	// TODO: Speziellen Code hier einfügen und/oder Basisklasse aufrufen
+	
+	<b>// Folgende Zeile muss auskommentiert werden
+	// -> return CFrameWnd::OnCreateClient(lpcs, pContext);
+
+	// Geteiltes Fenster mit 2 Zeilen und 2 Spalten erstellen
+	m_wndSplitter.CreateStatic(this,2,2);
+  
+	// Alle 4 Views an den in den ersten zwei Parametern übergebenen Positionen einfügen
+	m_wndSplitter.CreateView(0,0,RUNTIME_CLASS(DKunde),CSize(350,250),pContext);
+	m_wndSplitter.CreateView(1,0,RUNTIME_CLASS(DAdresse),CSize(350,250),pContext);
+	m_wndSplitter.CreateView(0,1,RUNTIME_CLASS(DLand),CSize(350,220),pContext);
+	m_wndSplitter.CreateView(1,1,RUNTIME_CLASS(DJoin),CSize(350,220),pContext);
+
+	return TRUE;</b>
+}
+    </pre>
+   </li>
+   <li>Funktionalität für die Buttons in den Views für Adresse, Kunde und Land implementieren.<br>
+   	Hier am Beispiel von Adresse:<br>
+   	<pre>
+<b>void DAdresse::OnVor() 
+{
+	// Datensatzzeiger vorrücken
+	m_pSet->MoveNext();
+	// Daten in die Controls (auf den Bildschirm) schreiben
+	UpdateData(false);
+}
+
+void DAdresse::OnZurueck() 
+{
+	// Datensatzzeiger zurückrücken
+	m_pSet->MovePrev();
+	// Daten in die Controls (auf den Bildschirm) schreiben
+	UpdateData(false);
+}
+
+void DAdresse::OnAdd() 
+{
+	// Datenbank für Hinzufügen vorbereiten
+	m_pSet->AddNew();
+	// Spalte Index der Tabelle ist Autowert
+	// desshalb den von AddNew() generierten merken..
+	int merker = m_pSet->m_Index;
+	// Daten von den Controls in die Variablen kopieren
+	UpdateData();
+	// .. und Autowert von Index restaurieren
+	m_pSet->m_Index = merker;
+	// Einfügeoperation abschließen
+	m_pSet->Update();
+	// Aktualisieren der Datenbank
+	m_pSet->Requery();
+	// Daten in Controls kopieren
+	UpdateData(false);
+}
+
+void DAdresse::OnDel() 
+{
+	// Aktellen Datensatz löschen
+	m_pSet->Delete();
+	// Gelöschten wirklich entfernen
+	// er wird sonst noch als gelöscht angezeigt
+	m_pSet->Requery();
+	// Controls aktualisieren
+	UpdateData(false);
+}
+
+void DAdresse::OnUpdate() 
+{
+	// Aktuellen Datensatz zum Editieren vorbereiten
+	m_pSet->Edit();
+	// Benutzereingaben in die Variablen kopieren
+	UpdateData();
+	// Editieroperation abschließen
+	m_pSet->Update();
+}</b>
+    </pre>
+   </li>
+   <li>Den gejointen Recordset gesondert behandeln.<br>
+   	Zeichnen mit CListCtrl, Eingabefeld und Button.<br>
+   	<img src="join1.jpg" alt=""><br>
+    Verbinden der Variablen.<br>
+    <img src="join2.jpg" alt="">
+   </li>
+   <li>Zum Hinzufügen der Tabellenüberschriften die Methode OnInitialUpdate der von CRecordSet abgeleiteten Klasse ändern.
+   	<pre>
+void DJoin::OnInitialUpdate()
+{
+	BeginWaitCursor();
+	GetRecordset();
+	CRecordView::OnInitialUpdate();
+	if (m_pSet->IsOpen())
+	{
+		CString strTitle = m_pSet->m_pDatabase->GetDatabaseName();
+		CString strTable = m_pSet->GetTableName();
+		if (!strTable.IsEmpty())
+			strTitle += _T(":") + strTable;
+		GetDocument()->SetTitle(strTitle);
+	}
+	EndWaitCursor();
+
+	<b>// Tabellenüberschriften setzen
+	m_list.InsertColumn(0,"Kunde",LVCFMT_LEFT,60);
+	m_list.InsertColumn(1,"Ort",LVCFMT_LEFT,60);
+	m_list.InsertColumn(2,"Strasse",LVCFMT_LEFT,80);
+	m_list.InsertColumn(3,"Hausnr",LVCFMT_LEFT,40);
+	m_list.InsertColumn(4,"Land",LVCFMT_LEFT,80);</b>
+}
+    </pre>  
+   </li>
+   <li>Eine Methode für den Suchbutton schreiben.<br>
+   	<pre>
+<b>void DJoin::OnSuch() 
+{
+	// Natural Join (jedes mit jedem) verhindern
+	m_pSet->m_strFilter = "Kunde.Adresse = Adresse.Index AND Adresse.Land = Land.Index";
+
+	// Schauen, ob etwas im Eingabefeld steht
+	UpdateData();
+	if (m_kunde != "")
+		//Wenn ja, danach suchen
+		m_pSet->m_strFilter += " AND Kunde.Name = '"+m_kunde+"'";
+
+	// Recordset aktualisieren ( Suchregel wird angewendet )
+	m_pSet->Requery();
+	// Alte Items der CListCtrl löschen
+	m_list.DeleteAllItems();
+	// Solange Elemente vorhanden
+	while (!m_pSet->IsEOF())
+	{
+		// in CListCtrl einfügen
+		int item = m_list.InsertItem(0,m_pSet->m_kunde,-1);
+		m_list.SetItemText(item,1,m_pSet->m_ort);
+		m_list.SetItemText(item,2,m_pSet->m_strasse);
+		m_list.SetItemText(item,3,m_pSet->m_hausnummer);
+		m_list.SetItemText(item,4,m_pSet->m_land);
+		// Aktellen Datensatz um eins weitersetzen
+		m_pSet->MoveNext();
+	}
+}<b>
+    </pre>
+   </li>
+		<li>Fertig</li>
+	</ol>
+  </BODY>
+</html>

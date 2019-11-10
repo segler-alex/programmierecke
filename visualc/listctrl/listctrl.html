@@ -1,0 +1,219 @@
+<html>
+<head>
+<title>Projekt listctrl</title>
+<link rel="stylesheet" type="text/css" href="../programme.css">
+</head>
+<HR>
+<center><H1>CListCtrl</H1></center>
+<HR>
+<H2>Einleitung</H2>
+Um diese Anleitung nicht zu lang werden zu lassen, schreibe ich immer nur die Dinge auf, die <b>verändert</b> werden müssen. Bei Codeabschnitten werden die Teile, die von mir verändert wurden fett geschrieben.
+<HR>
+<H2>Beispiel</H2>
+<H3>Aufgabe</H3>
+Erstellen Sie ein Visual C++ Programm, welches über ein eigenes Menü einen nonmodalen Dialog öffnet. Dieser Dialog enthält:
+<ol>
+<li>ein Textfeld "Eingabe" zur Eingabe einer Zeichnenkette,</li>
+<li>ein ListControl, welches die Zeichenketten mit einem Icon anzeigt,</li>
+<li>einen Push-Button "Insert" der den INhalt des Textfeldes in das ListControl überträgt,</li>
+<li>eine Gruppe von 4 Radiobuttons zur Auswahl des Icons (ICON1, ICON2, ICON3, ICON4), welches für die folgenden Einträge in das ListControl verwendet werden soll,</li>
+<li>ein Push-Button "delete", welcher das ausgewählte Element des Listcontrols löscht,</li>
+<li>der Inhalt des ListControls, zusammen mit Identifikation der jeweils zugeordneten Icons soll serialisierbar sein.</li>
+</ol>
+<H3>Lösung in Prosa</H3>
+<ol>
+<li>Leider habe ich es nicht geschaft ein CListCtrl dazu zu bewegen, sich zu serialisieren. Desshalb musste ich jedes Element zusätzlich in einer CObList speichern um es später serialisieren zu können.
+</li>
+<li>Zuerst muss einmal ein nonmodaler Dialog erstellt werden. Wichtig ist, dass nun ein Listenelement anstatt eines Listenfeldes gebraucht wird.<br>
+Auch wichtig ist, dass die Optionsfelder in der Tabulatorreihenfolge nacheinander kommen. Beim ersten und beim letzten muss in den Eigenschaften Tabstopp angekreuzt werden und nur beim ersten muss Gruppe angekreuzt werden. Für dieses erste Optionsfeld kann nun auch eine Membervariable angelegt werden, die auch für die anderen Optionsfelder mitgenutzt wird.<br>
+<img src="listctrl1.jpg">
+</li>
+<li>Hier nur ein Bild meiner Member-Variablen:<br>
+<img src="listctrl2.jpg">
+</li>
+<li>Includieren der Klasse des modalen Dialogs (bei mir MeinDialog.h) in die Header-Datei der View und hinzufügen einer Membervariablen zur View für den Dialog.<br>
+<img src="listctrl3.jpg">
+</li>
+<li>Diese Membervariable beim Programmstart initialisieren und bei Programmende wieder löschen.<br>
+<pre>
+CListctrlView::CListctrlView()
+{
+<b>	dia = NULL;</b>
+}
+
+CListctrlView::~CListctrlView()
+{
+<b>	dia->DestroyWindow();
+	delete dia;</b>
+}
+</pre>
+</li>
+<li>Um die Elemente abspeichern zu können, muss noch eine Membervariable des Typs CObList in die Klasse ClistctrlDoc eingefügt werden.<br>
+<img src="listctrl4.jpg">
+</li>
+<li>Serialisieren dieser Membervariable:<br>
+<pre>
+void CListctrlDoc::Serialize(CArchive& ar)
+{
+<b>	liste.Serialize(ar);</b>
+	if (ar.IsStoring())
+	{
+		// ZU ERLEDIGEN: Hier Code zum Speichern einfügen
+	}
+	else
+	{
+		// ZU ERLEDIGEN: Hier Code zum Laden einfügen
+	}
+}
+</pre>
+</li>
+<li>Jetzt wird noch eine Allgemeine Klasse gebraucht (meine heißt Element), die ein einzelnes Element repräsentiert. Folgende Membervariable werden gebraucht:<br>
+<ul>
+<li>Name : text<br>
+Typ : CString<br>
+zum Speichern des Titels</li>
+<li>Name : symbol<br>
+   Typ : int<br>
+   zum Speichern der Nummer des Symbols</li>
+</ul>
+</li>
+<li>Hinzufügen der Macros DECLARE_SERIAL(Element) und IMPLEMENT_SERIAL(Element,CObject,1) zu den Dateien Element.h und Element.cpp 
+</li>
+<li>Hinzufügen einer Memberfunktion Serialize(CArchive &ar) zur Klasse Element.<br>
+<img src="listctrl5.jpg"><br>
+<pre>
+void Element::Serialize(CArchive &ar)
+{
+<b>	if (ar.IsStoring())
+	{
+		ar << symbol << text;
+	}else
+	{
+		ar >> symbol >> text;
+	}</b>
+}
+</pre>
+</li>
+<li>Mittels des Klassenassistenten die Methode OnInitialUpdate der View überschreiben. Sie wird beim Programmstart und bei jedem Laden aufgerufen. Das Schließen des Fensters bei jedem Aufruf dient dazu, beim Laden den Dialog dazu zu bringen beim erneuten erstellen des Dialogs, die Einträge im Listenelement an die Einträge in der CObList anzupassen.<br>
+<pre>
+void CListctrlView::OnInitialUpdate() 
+{
+	CView::OnInitialUpdate();
+<b>	CListctrlDoc* pDoc = GetDocument();
+	ASSERT_VALID(pDoc);
+
+	// Diese Funktion wird auch nach einem Ladevorgang aufgerufen
+	// Wenn Fenster schon existiert
+	if (dia != NULL)
+	{
+		// Fenster schließen
+		dia->DestroyWindow();
+		delete dia;
+	}
+	// Neues Fenster erstellen
+	dia = new MeinDialog();
+	
+	// Dem Dialog die Adresse der CObList mitteilen
+	dia->liste = &pDoc->liste;
+	// Wenn noch nicht in Windows registriert ist, registrieren
+	if (dia->GetSafeHwnd() == NULL)
+		dia->Create(dia->IDD,this);</b>
+}
+</pre>
+</li>
+<li>Einen Button in der Symbolleiste zeichnen und einen Handler dafür schreiben der ungefähr so aussehen soll:<br>
+<pre>
+void CListctrlView::OnDia() 
+{
+<b>	if (!dia->IsWindowVisible())
+		dia->ShowWindow(SW_SHOW);
+	else
+		dia->ShowWindow(SW_HIDE);</b>
+}
+</pre>
+</li>
+<li>Nun müssen noch 2 Membervariablen zur Klasse MeinDialog hinzugefügt werden.<br>
+<img src="listctrl6.jpg"><br>
+<img src="listctrl7.jpg">
+</li>
+<li>Einen Handler für den Button Insert erstellen:<br>
+<pre>
+void MeinDialog::OnInsert() 
+{
+<b>	UpdateData(true);
+	// In ListenElement einfügen
+	int wirklicherIndex = m_list.InsertItem(0,m_eingabe,m_option);
+	// Neues Element ertellen
+	Element* elem = new Element();
+	elem->text = m_eingabe;
+	elem->symbol = m_option;
+	// Sich die Adresse des Elements im Listenelement merken, um später
+	// festzustellen, dass beide zusammengehören
+	m_list.SetItemData(wirklicherIndex,(unsigned long)elem);
+	// In CObList einfügen
+	liste->AddTail(elem);</b>
+}
+</pre>
+</li>
+<li>Einen Handler für den Button Delete erstellen:<br>
+<pre>
+void MeinDialog::OnDelete() 
+{
+<b>	// Diese Methode funktioniert auch für Mehrfachauswahl
+	POSITION pos = m_list.GetFirstSelectedItemPosition();
+	if (pos == NULL)
+		AfxMessageBox("Erst etwas auswählen");
+	else
+	while (pos)
+	{
+		int nItem = m_list.GetNextSelectedItem(pos);
+
+		// Holen des dazugehörigen Element in der CObList
+		// Suchen mittels der gemerkten Adresse
+		POSITION listepos = liste->Find((Element*)m_list.GetItemData(nItem));
+		// Löschen des Elements aus der CObList
+		delete liste->GetAt(listepos);
+		liste->RemoveAt(listepos);
+		// Löschen des Elements aus dem CListCtrl
+		m_list.DeleteItem(nItem);
+	}</b>
+}
+</pre>
+</li>
+<li>Nun müssen noch ein paar Icons gezeichnet werden. Diese sollten die Namen IDI_ICON1 bis IDI_ICON4 tragen.<br>
+<img src="listctrl8.jpg">
+</li>
+<li>Die Methode OnInitDialog der Klasse MeinDialog mit dem Klassenassistent überschreiben:<br>
+<pre>
+BOOL MeinDialog::OnInitDialog() 
+{
+	CDialog::OnInitDialog();
+	
+<b>	if (imagelist.GetSafeHandle() == NULL)
+	{
+		imagelist.Create(32,32,0,4,1);
+		imagelist.Add(AfxGetApp()->LoadIcon(IDI_ICON1));
+		imagelist.Add(AfxGetApp()->LoadIcon(IDI_ICON2));
+		imagelist.Add(AfxGetApp()->LoadIcon(IDI_ICON3));
+		imagelist.Add(AfxGetApp()->LoadIcon(IDI_ICON4));
+	}
+	m_list.SetImageList(&imagelist,LVSIL_NORMAL);
+
+	POSITION pos = liste->GetHeadPosition();
+	Element* elem;
+	while (pos != NULL)
+	{
+		elem = (Element*)liste->GetNext(pos);
+		int wirklicherIndex = m_list.InsertItem(0,elem->text,elem->symbol);
+		m_list.SetItemData(wirklicherIndex,(unsigned long)elem);
+	}
+	m_list.Invalidate(true);</b>
+
+	return TRUE;  // return TRUE unless you set the focus to a control
+	              // EXCEPTION: OCX-Eigenschaftenseiten sollten FALSE zurückgeben
+}
+</pre>
+</li>
+<li>Fertig</li>
+</ol>
+</html>

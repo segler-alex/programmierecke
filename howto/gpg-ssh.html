@@ -1,0 +1,192 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html lang="en">
+<head>
+  <meta content="text/html; charset=UTF-8" http-equiv="content-type"><title>Programmierecke.NET - The Source of Programming Information</title>
+  <meta content="segler_alex" name="author">
+  <meta name="robots" content="index,follow">
+  <meta content="Alles rund ums Programmiereren" name="description">
+</head>
+<body>
+<h1>Use OpenPGP Keys for OpenSSH, how to use gpg with ssh</h1>
+This is <a href="http://www.programmierecke.net">www.programmierecke.net</a>, section <a href="http://www.programmierecke.net/howto/">howto</a>, feedback to: <a href="mailto:segler_alex@web.de">segler_alex AT web DOT de</a><br/>
+My test system is Ubuntu Lucid 10.04
+
+<H2>Disable gnome keyring for GPG and SSH in Ubuntu 11.10</H2>
+This applies to all things below if you are using Ubuntu 11.10.<br/>
+To disable the keyring services you have to look at /etc/xdg/autostart. I just renamed "gnome-keyring-ssh.desktop" -> "gnome-keyring-ssh.nostart" and "gnome-keyring-gpg.desktop" -> "gnome-keyring-gpg.nostart"
+
+<h2>Without smartcard</h2>
+Further reading: <a href="http://web.monkeysphere.info/getting-started-user/">http://web.monkeysphere.info/getting-started-user/</a>
+<h3>change agent to gpg-agent</h3>
+you do not have to do this, but every other agent does need to register your key with it every session again.<br/>
+gpg-agent remembers the once added key and you never have to register it again.<br/>
+Not using gpg-agent, has the disadvantage of having to register the key every login-session with "monkeysphere s" again.
+<br/><br/>
+DON'T do this on ubuntu 10.04! ubuntu 10.04 uses a broken version of gpg-agent: 2.0.14. DON'T use this version on any other distribution. It will not work. gpg-agent has a bug in 2.0.14. (<a href="https://bugs.g10code.com/gnupg/issue1184">https://bugs.g10code.com/gnupg/issue1184</a>, <a href="https://bugs.launchpad.net/ubuntu/+source/gnupg2/+bug/567106">Bug on Launchpad</a>) Use ssh-agent or gnome-keyring-daemon instead.
+<pre>
+# install gpg-agent
+apt-get install gnupg-agent
+
+# deactivate gnome-keyring-daemon ssh-agent dropin-replacement, we want only gpg-agent
+# VERY OLD versions of ubuntu (uses gconf settings for autostart)
+gconftool-2 --type bool --set /apps/gnome-keyring/daemon-components/ssh false
+# newer ubuntu < 12.04 (uses xdg autostart)
+mkdir ~/config/autostart
+echo "X-GNOME-Autostart-enabled=false" > ~/.config/autostart/gnome-keyring-gpg.desktop
+echo "X-GNOME-Autostart-enabled=false" > ~/.config/autostart/gnome-keyring-ssh.desktop
+
+# ubuntu >= 12.04 (uses upstart override)
+echo manual >> ~/.config/upstart/gnome-keyring.override
+
+
+# maybe you have to deactivate ssh-agent too,
+# if you are using some older ubuntu version, or ssh-agent keeps interfering
+# this is done somewhere in /etc/X11/Xsession.options
+
+# configure gpg to use agent (only for smartcard)
+echo "use-agent" >> ~/.gnupg/gpg.conf
+
+# enable ssh-agent drop in replacement support for gpg-agent
+echo "enable-ssh-support" >> ~/.gnupg/gpg-agent.conf
+
+# on ubuntu >= 13.10 (uses upstart) you have to override the broken gpg-agent start script
+mkdir ~/.init
+wget http://www.programmierecke.net/howto/gpg-agent.conf -O ~/.init/gpg-agent.conf
+
+# logout, login
+# gpg-agent should now start
+# check with:
+ps aux | grep gpg-agent
+# check gpg-agent ssh-features
+set | grep SSH
+</pre>
+<h3>register key with your agent</h3>
+<pre>
+# please install package "monkeysphere" for this. it will be easier then.
+sudo apt-get install monkeysphere
+
+# secure gnupg homedir
+chmod -R go-rwx ~/.gnupg
+
+# create authentication subkey
+#  only do this, if you haven't created a authentication subkey yet
+monkeysphere g
+
+# export gpg key to agent
+monkeysphere s
+# check if the key got added to the agent.
+# this command should show your added key.
+ssh-add -l
+
+# search for authentication subkey-id
+# one of the subkeys that are displayed now, has "usage: A" for authentication
+gpg --edit-key mail@example.com
+quit
+
+# EXAMPLE output of gpg --edit-key mail@...
+# this example has the authentication subkey-id: "695A85B3"
+gpg (GnuPG) 1.4.10; Copyright (C) 2008 Free Software Foundation, Inc.
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+Secret key is available.
+
+pub  2048R/D3C38CEA  created: 2010-04-24  expires: never       usage: SC  
+                     trust: ultimate      validity: ultimate
+sub  2048R/A2172965  created: 2010-04-24  expires: never       usage: E   
+sub  2048R/695A85B3  created: 2010-04-24  expires: never       usage: A
+
+# create authorized keys file
+# replace "12345678" with your authentication subkey-id from the before
+gpgkey2ssh 12345678 >> ~/authorized_keys
+
+# move authorized_keys file to computer with openssh-server
+scp ~/authorized_keys user@testhost:/home/user/.ssh/
+
+# testing ssh
+ssh -v user@testhost
+
+# it should work now
+</pre>
+<h2>with smartcard (openpgp)</h2>
+<h3>Some Links</h3>
+<ul>
+	<li>Using Smartcard with Windows (Putty): <a href="http://smartcard-auth.de/download-de.html">Pageant for Putty with smartcard support</a></li>
+</ul>
+<h3>step by step</h3>
+Don't install/use monkeysphere. it does not work with authentication keys on smartcards.
+<pre>
+# install needed packages
+# gpgsm package is needed, because we need "scdaemon" = smartcard-daemon
+apt-get install gpgsm
+# gpg-agent is needed because it is the only possibility to use a authentication subkey directly from the smartcard
+apt-get install gnupg-agent
+
+# deactivate gnome-keyring-daemon ssh-agent dropin-replacement, we want only gpg-agent
+# VERY OLD versions of ubuntu (uses gconf settings for autostart)
+gconftool-2 --type bool --set /apps/gnome-keyring/daemon-components/ssh false
+# newer ubuntu < 12.04 (uses xdg autostart)
+echo "X-GNOME-Autostart-enabled=false" >> /etc/xdg/autostart/gnome-keyring-ssh.desktop
+echo "X-GNOME-Autostart-enabled=false" >> /etc/xdg/autostart/gnome-keyring-gpg.desktop
+# ubuntu >= 12.04 (uses upstart override)
+mkdir ~/.config/upstart
+echo manual >> ~/.config/upstart/gnome-keyring.override
+mkdir ~/config/autostart
+echo "X-GNOME-Autostart-enabled=false" > ~/.config/autostart/gnome-keyring-ssh.desktop
+
+# maybe you have to deactivate ssh-agent too, (not required on ubuntu 10.04)
+# if you are using some older ubuntu version, or ssh-agent keeps interfering
+# this is done somewhere in /etc/X11/Xsession.options
+
+# configure gpg to use agent (only for smartcard)
+echo "use-agent" >> ~/.gnupg/gpg.conf
+
+# enable ssh-agent drop in replacement support for gpg-agent
+echo "enable-ssh-support" >> ~/.gnupg/gpg-agent.conf
+
+# on ubuntu >= 13.10 (uses upstart) you have to override the broken gpg-agent start script
+mkdir ~/.init
+wget http://www.programmierecke.net/howto/gpg-agent.conf -O ~/.init/gpg-agent.conf
+
+# logout, login
+# gpg-agent should now start automatically
+# check with:
+ps aux | grep gpg-agent
+# check gpg-agent ssh-features
+set | grep SSH
+
+# import card from smartcard
+# only do this, if you haven't imported the key from your smartcard yet, or if you are on another computer
+gpg --card-edit
+fetch
+quit
+
+# calling gpg a second time is needed, that gpg fully recognizes the key on the card
+# remember the last 8 characters of the line starting with "Authentication key:"
+# this is your authentication subkey-id, it is needed later
+gpg --card-status
+
+# secure gnupg homedir
+chmod -R go-rwx ~/.gnupg
+
+# update authorized keys file
+# replace "12345678" with your authentication subkey-id from the before
+gpgkey2ssh 12345678 >> ~/authorized_keys
+
+# this file has to be copied to the computer with the openssh-server
+scp ~/authorized_keys user@testhost:/home/user/.ssh/
+
+# testing ssh, it should ask for a PIN now, if you have one
+ssh -v user@testhost
+
+# it should work now
+</pre>
+<h3>bugs i encountered</h3>
+* DON'T try to use smartcard, if it is not connected. it will destroy scdaemon and you will either have to logout and login again or to do: "killall -9 scdaemon". this happens after reconnecting the smartcard:
+<pre>
+# gpg --card-status
+gpg: selecting openpgp failed: ec=6.108
+gpg: OpenPGP card not available: general error
+</pre>
+</body>
+</html>

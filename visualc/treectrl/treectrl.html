@@ -1,0 +1,467 @@
+<html>
+<head>
+<title>Projekt treectrl</title>
+<link rel="stylesheet" type="text/css" href="../programme.css">
+</head>
+<HR>
+<center><H1>CTreeCtrl</H1></center>
+<HR>
+<H2>Einleitung</H2>
+Um diese Anleitung nicht zu lang werden zu lassen, schreibe ich immer nur die Dinge auf, die <b>verändert</b> werden müssen. Bei Codeabschnitten werden die Teile, die von mir verändert wurden fett geschrieben.
+<HR>
+<H2>Beispiel</H2>
+<H3>Aufgabe</H3>
+Erstellen Sie ein Terminverwaltungsprogramm mit folgenden Eigenschaften:
+<ol>
+<li>Ein Termin besteht aus einem Zeitpunkt (Tag, Monat, Jahr, Stunde, Minute) und einer Beschreibung.</li>
+<li>Die Terminverwaltung wird durch eine Anwendung, die beim Start einen Dialog startet, realisiert. Beim Verlassen des Dialoges ist die Anwendung zu beenden.</li>
+<li>Der zugehörige Dialog besteht aus einer Strukturansicht (TreeControl) und Feldern zur Darstellung eines Termins.</li>
+<li>Spezielle Textfelder für Datum und Uhrzeit lassen nur die Eingabe von speziellen Zeichenketten zu:
+	<ul type="disc">
+		<li>Datum : <b>TT.MM.JJJJ</b> also Kombination aus Ziffern und '.'</li>
+		<li>Uhrzeit : <b>HH:MM</b> also Kombination aus Ziffern und ':'</li>
+	</ul>	
+</li>
+<li>Die Strukturansicht stellt Termine strukturiert dar:
+	<ul type="square">
+		<li>Oberste Ebene : Jahr</li>
+		<li>2. Ebene : Monat</li>
+		<li>3. Ebene : Tag</li>
+		<li>4. Ebene : Stunde</li>
+		<li>5. Ebene : Minute</li>		
+	</ul>
+</li>
+<li>Bei Auswahl eines Termins durch "Anklicken" werden die Daten des Termins in den Textfeldern dargestellt.</li>
+<li>Ein Button "Eintragen" bewirkt, dass der in den Editfeldern beschriebene Termin in die Terminverwaltung übernommen wird. Bei Übernahme wird geprüft, ob die Eingabein den Textfeldern plausibel ist:
+	<ul type="circle">
+		<li>Tag : 1 bis 31</li>
+		<li>Monat : 1 bis 12</li>
+		<li>Jahr : 1995 bis 2010</li>
+		<li>Stunde : 0 bis 23</li>
+		<li>Minute : 0 bis 59</li>
+	</ul>
+	Gegebenfalls wird eine Messagebox mit Fehlermeldung angezeigt.
+</li>
+<li>Die verwalteten Termine sollen auch serialisiert werden können.</li>
+</ol>
+<H3>Lösung in Prosa</H3>
+<ol>
+<li>Zuerst einmal ein neues Projekt anlegen:
+	<ul>
+		<li>Schritt 1 : SDI - Anwendung</li>
+		<li>Schritt 6 : CFormView<br>
+		<img src="treectrl1.jpg" alt=""></li>
+	</ul>
+</li>
+<li>Zeichnen des Dialogs:<br>
+<img src="treectrl2.jpg" alt=""></img><br>
+Um im CTreeCtrl die verbindenden Linien und die Symbole + und - zum Öffnen und Schließen eines Asts des Baumes müssen nur in den Eigenschaften des CTreeCtrls folgende Formate angekreuzt werden:<br>
+<img src="treectrl3.jpg" alt=""> 
+</li>
+<li>Noch bevor man die Membervariablen für die Dialogelemente anlegt, müssen die speziellen Eingabefelder, die nur entweder ein Datum oder eine Zeit eingeben lassen erstellt werden. Dazu werden 2 neue Klassen erstellt, die von CEdit abgeleitet werden.<br>
+	<ul>
+		<li>Menü Einfügen -> Neue Klasse..<br>
+		<img src="treectrl4.jpg" alt=""></li>
+		<li>Zu dieser Klasse werden nun Überprüfungen hinzugefügt, die prüfen, ob der eingegebene String ein Datum ist.<br>
+		Ich habe ihr dazu eine Methode hinzugefügt, die die Richtigkeit des Datums prüft. Sie könnte vielleicht noch verbessert werden, reicht aber im Moment vollkommen aus.<br>
+		<pre>
+bool CDatumEdit::isContentValid()
+{
+<b>	// Diese Methode prüft, ob der eingebebene
+	// String in ein gültiges Datum ist
+	CString str;
+	int jahr,monat,tag;
+
+	// Holen des eingegebenen Textes
+	GetWindowText(str);
+	// Besteht er aus 3 Elementen und ist er durch Punkte getrennt ?
+	if (sscanf(str,"%d.%d.%d",&tag,&monat,&jahr) != 3)
+		return false;
+	// Ist der Tag eine Zahl von 1 bis 31 ?
+	if ((tag < 1)||(tag > 31))
+		return false;
+	// Ist das Monat eine Zahl von 1 bis 12 ?
+	if ((monat < 1)||(monat > 12))
+		return false;
+	// Ist das Jahr eine Zahl von 1995 bis 2010
+	if ((jahr < 1995)||(jahr > 2010))
+		return false;
+	// Es passt alles
+	return true;</b>
+}
+		</pre>
+		</li>
+		<li>Überschreiben der Methoden für Bekommen und Verlieren des Fokus des Eingabefeldes<br>
+		<img src="treectrl5.jpg" alt="">
+		<pre>
+void CDatumEdit::OnSetfocus() 
+{
+<b>	// Beim Betreten des Dialogfeldes den alten Text merken
+	GetWindowText(oldText);</b>
+}
+		</pre>
+		<pre>
+void CDatumEdit::OnKillfocus() 
+{
+<b>	// Ist der neue Text kein Datum ...
+	if (!isContentValid())
+	{
+		//MessageBox("Sie müssen ein Datum in der Form TT.MM.JJJJ eingeben.",NULL,MB_OK|MB_ICONSTOP);
+		// .. dann alten wieder setzen
+		SetWindowText(oldText);
+	}</b>
+}
+ 		</pre>
+		</li>
+		<li>Für das Eingabefeld für Zeit muss das gleiche noch einmal getan werden. Anders ist nur die Prüfroutine:<br>
+		<pre>
+bool CZeitEdit::isContentValid()
+{
+<b>	// Diese Methode prüft, ob der eingebebene
+	// String in eine gültige Zeit ist
+	CString str;
+	int stunde,minute;
+
+	// Holen des eingegebenen Textes
+	GetWindowText(str);
+	// Besteht er aus 2 Elementen und ist er durch Doppelpunkt getrennt ?
+	if (sscanf(str,"%02d:%02d",&stunde,&minute) != 2)
+		return false;
+	// Ist die Stunde eine Zahl von 0 bis 23 ?
+	if ((stunde < 0)||(stunde > 23))
+		return false;
+	// Ist die Minute eine Zahl von 0 bis 59 ?
+	if ((minute < 0)||(minute > 59))
+		return false;
+	// Es passt alles
+	return true;</b>
+}
+		</pre>
+		</li>
+		<li>Man könnte die Nachrichten SetFokus und Killfokus der Eingabefelder auch direkt ohne zusätzliches Anlegen einer Klasse für Datum und Zeit abfangen, aber ich wollte hier zeigen, wie man Steuerelementklassen überschreibt. Man kann dadurch das Steuerelement mit der speziellen Funktionalität wiederverwendbar machen, um nicht jedes Mal wieder die Funktionalität einbauen zu müssen.</li>
+	</ul>
+</li>
+<li>Nun können die Membervariablen für die Elemente des Dialogs angelegt werden:<br>
+Dazu müssen noch die Klassen für die speziellen Eingabefelder in die View inkludiert werden:<br>
+<br><u>termineView.h</u>
+<pre>
+<b>#include "DatumEdit.h"
+#include "ZeitEdit.h"</b>
+</pre>
+<img src="treectrl6.jpg" alt=""><br><br>
+Ich lege die Controlvariablen für das Datums- und das Zeiteingabefeld nur deshalb zusätzlich zu den Wertvariablen an, weil sonst Windows nicht weiß, dass es das spezielle Eingabefeld nutzen soll. Ich brauche sie sonst im ganzen Programm nicht mehr.<br>
+<img src="treectrl7.jpg" alt="">
+</li>
+<li>Weil ich gern möchte, dass der Add Button nur dann aktiv ist, wenn die beiden Datums- und Zeiteingabefeldern gültige Werte enthalten, überschreibe ich 2 Methoden von termineView. Es sind jeweils Handler für die Nachricht EN_CHANGE der jeweiligen Eingabefelder.<br>
+<pre>
+void CTermineView::OnChangeDatum() 
+{
+<b>	// Sind die Inhalte der Eingabefelder gültig ?
+	if (m_datumctrl.isContentValid() && m_zeitctrl.isContentValid())
+		// Aktiviere Button
+		m_Add.EnableWindow(true);
+	else
+		// Deaktiviere Button
+		m_Add.EnableWindow(false);</b>
+}
+</pre>
+<pre>
+void CTermineView::OnChangeZeit()
+{
+<b>	// Sind die Inhalte der Eingabefelder gültig ?
+	if (m_datumctrl.isContentValid() && m_zeitctrl.isContentValid())
+		// Aktiviere Button
+		m_Add.EnableWindow(true);
+	else
+		// Deaktiviere Button
+		m_Add.EnableWindow(false);</b>
+}
+</pre>
+Der Button muss zu Anfang des Programms deaktiviert sein. Dies kann in der Methode OnInitialUpdate der Klasser der View erreicht werden.<br>
+<pre>
+void CTermineView::OnInitialUpdate()
+{
+	CFormView::OnInitialUpdate();
+	GetParentFrame()->RecalcLayout();
+	ResizeParentToFit();
+
+<b>	// Button am Anfang deaktivieren
+	m_Add.EnableWindow(false);</b>
+}
+</pre>
+</li>
+<li>Nun erstellt man am Besten gleich die Klasse, in der man einen Termin speichern kann und die man auch gleich serialisieren kann.<br>
+	<ul>
+		<li>-> Einfügen -> Neue Klasse ...<br>
+<img src="treectrl8.jpg" alt=""></li>
+		<li>Diese Membervariable zur Klasse hinzufügen:<br>
+		<pre>
+CString Text;
+int stunde,minute;
+int jahr,monat,tag;</pre>
+		</li>
+		<li>Die Methode void Serialize(CArchive &ar) zur Klasse hinzufügen<br>
+		<pre>
+void Element::Serialize(CArchive &ar)
+{
+<b>	if (ar.IsStoring())
+	{
+		ar << jahr << monat << tag << stunde << minute << Text;
+	}else
+	{
+		ar >> jahr >> monat >> tag >> stunde >> minute >> Text;
+	}</b>
+}</pre>
+		</li>
+		<li>Hinzufügen der Makros DECLARE_SERIAL(Element) zur Datei Element.h<br>
+		und IMPLEMENT_SERIAL(Element,CObject,1) zur Datei Element.cpp<br>
+		<pre>
+class Element : public CObject  
+{
+public:
+<b>	DECLARE_SERIAL(Element)
+	void Serialize(CArchive &ar);</b>
+	Element();
+	virtual ~Element();
+
+<b>	CString Text;
+
+	int stunde,minute;
+	int jahr,monat,tag;</b>
+};</pre>
+		</li>
+		<li>Inkludieren der Klasse Element in die Datei CTermineView</li>
+		<li>Hinzufügen der Variable 'CObList list' zur Klasse CTermineDoc</li>
+		<li>Nun noch die CObList serialisieren:<br>
+		<pre>
+void CTermineDoc::Serialize(CArchive& ar)
+{
+<b>	list.Serialize(ar);</b>
+	if (ar.IsStoring())
+	{
+		// ZU ERLEDIGEN: Hier Code zum Speichern einfügen
+	}
+	else
+	{
+		// ZU ERLEDIGEN: Hier Code zum Laden einfügen
+	}
+}
+ 	 	</pre>
+		</li>
+	</ul>
+</li>
+<li>Nun muss der Termin noch zum CTreeCtrl hinzugefügt werden. Da man aber bei jedem Einfügevorgang eines jeden einzelnen Items in das CListCtrl prüfen müsste, ob es das Element schon gibt, habe ich mir eine Methode geschrieben, die nach einem child mit dem angegebenen text von den angegebenen parent sucht. Wird es gefunden, kann man es einfach zurückgeben. Wenn nicht, erstelle ich es und gebe dann das neue Item zurück.<br>
+<br><u>CTermineView.cpp</u>
+<pre>
+HTREEITEM CTermineView::getItem(CString text, HTREEITEM parent)
+{
+<b>	// Diese Methode sucht nach einem Child des übergebenen Parent, das
+	// als angezeigten Namen text besitzt. Wenn es das Item findet wir es zurück
+	// gegeben. Sonst wird es neu angelegt.
+	// Die Methode dient dazu, zu verhindern dass Einträge, wie zb ein Jahr
+	// oder ein Monat etc. doppelt vorhanden sind.
+
+	// Hole erstes Child
+	HTREEITEM child = m_tree.GetChildItem(parent);
+
+	// Solange Child nicht gefunden wurde..
+	while (child != NULL)
+	{
+		// Ist es das gesuchte Item ?
+		if (m_tree.GetItemText(child) == text)
+			// Ja, dann zurückgeben
+			return child;
+		// Nächstes Child vom übergebenen parent holen,
+		// also Bruderelement von child.
+		child = m_tree.GetNextSiblingItem(child);
+	}
+	// Child nicht gefunden, also neu erstellen
+	child = m_tree.InsertItem(text,0,0,parent);
+	// lparam des Childs auf NULL setzen.
+	m_tree.SetItemData(child,(DWORD) NULL);
+	// Neues Child zurückgeben
+	return child;</b>
+}
+</pre>
+</li>
+<li>Es folgt eine Methode, die einen gesamten Termin mittels der Methode getItem in CTreeCtrl einfügt.<br>
+<pre>
+void CTermineView::AddTermin(int jahr, int monat, int tag, int stunde, int minute, CString text,DWORD data,bool show)
+{
+<b>	// Diese Methode fügt einen Eintrag zum CTreeCtrl hinzu
+	CString zwsp;
+
+	// Zahl in String umwandeln
+	zwsp.Format("%4d",jahr);
+	// Element als Rootelement einfügen und merken
+	// TVI_ROOT .. Als Rootelement einfügen
+	HTREEITEM hjahr = getItem(zwsp,TVI_ROOT);
+
+	zwsp.Format("%2d",monat);
+	// als Child von hjahr einfügen
+	HTREEITEM hmonat = getItem(zwsp,hjahr);
+
+	zwsp.Format("%2d",tag);
+	HTREEITEM htag = getItem(zwsp,hmonat);
+
+	zwsp.Format("%2d",stunde);
+	HTREEITEM hstunde = getItem(zwsp,htag);
+
+	zwsp.Format("%2d",minute);
+	HTREEITEM hminute = getItem(zwsp,hstunde);
+
+	HTREEITEM htext = m_tree.InsertItem(text,0,0,hminute);
+	// im Datenfeld von htext, das bei jedem Item dazu gespeichert werden kann, die Adresse
+	// des Elements in der CObList merken.
+	m_tree.SetItemData(htext,(DWORD) data);
+	// Wenn es sichtbar werden soll..
+	if (show)
+		// .. dann anzeigen
+		m_tree.EnsureVisible(htext);</b>
+}
+</pre> 
+</li>
+<li>Nun kann man den Handler für den Button Add schreiben:<br>
+<pre>
+void CTermineView::OnAdd() 
+{
+<b>	// Dokument holen
+	CTermineDoc * doc = GetDocument();
+	// Neues Element für Termin erstellen
+	Element *elem = new Element();
+
+	// Einfügen in die Liste
+	// Holen der Daten der Dialogelemente in die Membervariable
+	UpdateData();
+	// Die Strings zerlegen, und in das neue Element schreiben
+	// Richtigkeit wird schon in den Eingabefeldern geprüft
+	sscanf(m_datum,"%2d.%2d.%4d",&elem->tag,&elem->monat,&elem->jahr);
+	sscanf(m_zeit,"%2d:%2d",&elem->stunde,&elem->minute);
+	elem->Text = m_text;
+
+	// Zur CObList hinzufügen
+	doc->list.AddTail(elem);
+
+	// Einfügen in den Dialog
+	AddTermin(elem->jahr,elem->monat,elem->tag,elem->stunde,elem->minute,elem->Text,(DWORD)elem,true);</b>
+}
+</pre>
+</li>
+<li>Bei Klick auf den Beschreibungstext eines Termins im CTreeCtrl soll er die Daten in den Eingabefeldern anzeigen. Dazu muss nur der Handler für das Ändern der Auswahl der CTreeCtrl überschrieben werden.<br>
+Ich wollte zuerst, den Handler On_Click verwenden, doch konnte man mit den Parametern, die diesem Handler von Windows übergeben nichts anfangen.<br>
+Die Nachricht, für die der Handler geschrieben werden soll heißt TVN_SELCHANGED.<br>
+<pre>
+void CTermineView::OnSelchangedTree(NMHDR* pNMHDR, LRESULT* pResult) 
+{
+	// Angeklicktes Item
+	NM_TREEVIEW* item = (NM_TREEVIEW*) pNMHDR;
+
+<b>	// Existiert Item..
+	if (item->itemNew.hItem != NULL)
+	{
+		// Ist es das Element, das den Beschreibungstext enthält..
+		// Beim Hinzufügen eines Termins zu CTreeCtrl habe ich mir mit
+		// SetItemData den Wert von lParam gesetzt, aber nur beim Item,
+		// das den Beschreibungstext enthält.
+		if (item->itemNew.lParam != NULL)
+		{
+			CString zwsp;
+
+			// Zugehöriges Element holen
+			Element* elem = (Element*)item->itemNew.lParam;
+			// Variable der Dialogelemente setzen
+			m_text = elem->Text;
+			// String Datum aus den Einzelkomponenten zusammenstellen
+			zwsp.Format("%02d.%02d.%04d",elem->tag,elem->monat,elem->jahr);
+			m_datum = zwsp;
+			// String Zeit aus den Einzelkomponenten zusammenstellen
+			zwsp.Format("%02d:%02d",elem->stunde,elem->minute);
+			m_zeit = zwsp;
+			// Variable anzeigen
+			UpdateData(false);
+		}
+	}</b>
+	
+	*pResult = 0;
+}
+</pre>
+</li>
+<li>Bei jedem Laden, müssen die Termin in die CTreeCtrl eingetragen werden.<br>
+<pre>
+void CTermineView::OnInitialUpdate()
+{
+	CFormView::OnInitialUpdate();
+	GetParentFrame()->RecalcLayout();
+	ResizeParentToFit();
+
+<b>	// Einfügen der Elemente in der CObjectList in das CTreeCtrl
+	// Wird beim Starten des Programms und beim Laden aufgerufen
+	CTermineDoc * doc = GetDocument();
+	Element *elem;
+	POSITION pos = doc->list.GetHeadPosition();
+
+	// Alle Elemente der CTreeCtrl löschen
+	m_tree.DeleteAllItems();
+	// Hinzufügen der geladenen Elemente in der CObList zum CTreeCtrl
+	while (pos != NULL)
+	{
+		elem = (Element*)doc->list.GetNext(pos);
+		AddTermin(elem->jahr,elem->monat,elem->tag,elem->stunde,elem->minute,elem->Text,(DWORD)elem,false);
+	}</b>
+
+	// Button am Anfang deaktivieren
+	m_Add.EnableWindow(false);
+}
+</pre>
+</li>
+<li>Es fehlen noch die Bildchen vor den Einträgen der Termine:<br>
+	<ul>
+		<li>Variable 'CImageList imagelist' zur Klasse CTermineView hinzufügen</li>
+		<li>Icon zeichnen<br>
+		<img src="treectrl9.jpg" alt=""></li>
+		<li>Initialisierungscode hinzufügen<br>
+		<pre>
+void CTermineView::OnInitialUpdate()
+{
+	CFormView::OnInitialUpdate();
+	GetParentFrame()->RecalcLayout();
+	ResizeParentToFit();
+
+<b>	// Nur beim Programmstart Icons laden
+	// Nach einem Aufruf von Create von CImageList, ist
+	// GetSafeHandle() != NULL.
+	if (imagelist.GetSafeHandle() == NULL)
+	{
+		// ImageList erstellen
+		imagelist.Create(/*Breite:*/16,/*Höhe:*/16,0,1,1);
+		// Icon laden und zur CImageList hinzufügen
+		imagelist.Add(AfxGetApp()->LoadIcon(IDI_ICON1));
+		// Setzen der CImageList des CTreeCtrl
+		m_tree.SetImageList(&imagelist,TVSIL_NORMAL);
+	}</b>
+
+	// Einfügen der Elemente in der CObjectList in das CTreeCtrl
+	// Wird beim Starten des Programms und beim Laden aufgerufen
+	CTermineDoc * doc = GetDocument();
+	Element *elem;
+	POSITION pos = doc->list.GetHeadPosition();
+
+	// Alle Elemente der CTreeCtrl löschen
+	m_tree.DeleteAllItems();
+	// Hinzufügen der geladenen Elemente in der CObList zum CTreeCtrl
+	while (pos != NULL)
+	{
+		elem = (Element*)doc->list.GetNext(pos);
+		AddTermin(elem->jahr,elem->monat,elem->tag,elem->stunde,elem->minute,elem->Text,(DWORD)elem,false);
+	}
+
+	// Button am Anfang deaktivieren
+	m_Add.EnableWindow(false);
+}
+		</pre>
+		</li>
+	</ul>
+</li>
+<li>Fertig</li>
+</ol>
+</html>

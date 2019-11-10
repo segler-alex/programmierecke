@@ -1,0 +1,119 @@
+<html>
+<head>
+<title>Projekt Zeichner</title>
+<link rel="stylesheet" type="text/css" href="../programme.css">
+</head>
+<HR>
+<center><H1>Zeichnen mit MFC Erweiterung 3</H1></center>
+<HR>
+<H2>Einleitung</H2>
+Um diese Anleitung nicht zu lang werden zu lassen, schreibe ich immer nur die Dinge auf, die <b>verändert</b> werden müssen. Bei Codeabschnitten werden die Teile, die von mir verändert wurden fett geschrieben.
+<HR>
+<H2>Beispiel</H2>
+<H3>Aufgabe</H3>
+Das Programm Zeichner soll so erweitert werden, dass die Gesamtzeichnung in einer Datei abgespeichert und wieder geladen werden kann.
+<H3>Lösung in Prosa</H3>
+<ol>
+<li>Zuerst muss die ObjektListe der Klasse CZeichnerDoc angewiesen werden, sich zu 'Serialisieren'.<br>
+Änderung in der Methode Serialize der Klasse CZeichnerDoc:
+<pre>
+void CZeichnerDoc::Serialize(CArchive& ar)
+{
+<b>	ObjektListe.Serialize(ar);</b>
+	if (ar.IsStoring())
+	{
+		// ZU ERLEDIGEN: Hier Code zum Speichern einfügen
+	}
+	else
+	{
+		// ZU ERLEDIGEN: Hier Code zum Laden einfügen
+	}
+}
+</pre>
+</li>
+<li>Hinzufügen einer Funktion zum speichern und laden (Serialisieren) zur Klasse Linie:
+mit der rechten Maustaste auf die Klasse Linie klicken, Member-Funktion hinzufügen...<br>
+<img src="prdraw4.1.jpg"><br>
+Hinzufügen von Code zu dieser Funktion...<br>
+<pre>
+void Linie::Serialize(CArchive &ar)
+{
+	<b>if (ar.IsStoring())
+	{
+		ar << startpunkt << endpunkt << farbe << dicke;
+	}else
+	{
+		ar >> startpunkt >> endpunkt >> farbe >> dicke;
+	}</b>
+}
+</pre>
+</li>
+<li>Nun muss nur noch die Klasse auf das Serialisieren 'vorbereitet' werden, dass heißt Visual C++ braucht noch eine zusätzliche Zeile in der Datei Linie.h und eine in der Datei Linie.cpp. Würden noch andere Klassen gespeichert werden würden diese Zeilen auch dort benötigt.<br>
+<u>Und zwar in der Datei Linie.h direkt in der Klasse:</u><br>
+DECLARE_SERIAL(Linie)
+Erklärung der Parameter:<br>
+1.Parameter : Name der Klasse selber, Linie<br>
+<u>Und zwar in der Datei Linie.cpp:</u><br>
+IMPLEMENT_SERIAL(Linie,CObject,1)<br>
+Erklärung der Parameter:<br>
+1.Parameter : Name der Klasse selber, Linie<br>
+2.Parameter : Name der Klasse von die Klasse abgeleitet wurde, CObject<br>
+3.Parameter : Versionsnummer, hat für uns noch keine Bedeutung, werden aber mehrere Klassen serialisiert, muss überall die gleiche Versionsnummer eingetragen werden.<br><br>
+<u>Linie.h</u>
+<pre>
+// Linie.h: Schnittstelle für die Klasse Linie.
+//
+//////////////////////////////////////////////////////////////////////
+
+#if !defined(AFX_LINIE_H__1D1B215B_847B_41F4_B837_877ABE780E17__INCLUDED_)
+#define AFX_LINIE_H__1D1B215B_847B_41F4_B837_877ABE780E17__INCLUDED_
+
+#if _MSC_VER > 1000
+#pragma once
+#endif // _MSC_VER > 1000
+
+class Linie : public CObject  
+{
+public:
+	void Serialize(CArchive &ar);
+
+<b>	DECLARE_SERIAL(Linie)</b>
+
+	int dicke;
+	COLORREF farbe;
+	CPoint endpunkt;
+	CPoint startpunkt;
+	Linie();
+	virtual ~Linie();
+
+};
+
+#endif // !defined(AFX_LINIE_H__1D1B215B_847B_41F4_B837_877ABE780E17__INCLUDED_)
+
+</pre>
+<u>Linie.cpp</u>
+<pre>
+// Linie.cpp: Implementierung der Klasse Linie.
+//
+//////////////////////////////////////////////////////////////////////
+
+#include "stdafx.h"
+#include "stdafx.h"
+#include "Linie.h"
+
+#ifdef _DEBUG
+#undef THIS_FILE
+static char THIS_FILE[]=__FILE__;
+#define new DEBUG_NEW
+#endif
+
+//////////////////////////////////////////////////////////////////////
+// Konstruktion/Destruktion
+//////////////////////////////////////////////////////////////////////
+
+<b>IMPLEMENT_SERIAL(Linie,CObject,1)</b>
+</pre>
+</li>
+<li>Fertig</li>
+</ol>
+</html>

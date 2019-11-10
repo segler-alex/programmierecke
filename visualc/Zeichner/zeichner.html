@@ -1,0 +1,103 @@
+<html>
+<head>
+<title>Projekt Zeichner</title>
+<link rel="stylesheet" type="text/css" href="../programme.css">
+</head>
+<HR>
+<center><H1>Zeichnen mit MFC</H1></center>
+<HR>
+<div class="Einleitung">
+<H2>Einleitung</H2>
+Um diese Anleitung nicht zu lang werden zu lassen, schreibe ich immer nur die Dinge auf, die <b>verändert</b> werden müssen. Bei Codeabschnitten werden die Teile, die von mir verändert wurden fett geschrieben.
+</div>
+<HR>
+<H2>Beispiel</H2>
+<div class="Aufgabe">
+<H3>Aufgabe</H3>
+Es soll ein Programm geschrieben werden, das Striche mit der Maus zeichnet. Wird eine Maustaste gedrückt, wird der Startpunkt der Linie gesetzt; wird sie wieder losgelassen, wird eine Linie vom Startpunkt bis zum Punkt des Loslassens der Maustaste gezogen.
+</div>
+<H3>Lösung in Prosa</H3>
+<ol>
+<li>Datei -> Neu..</li>
+<li>MFC-Anwendungs-Assistent<br>
+Anwendungsname : Zeichner</li>
+<br><img src="prdraw1.jpg">
+<li>Schritt 1 : Einzelnes Dokument (SDI) -> Fertigstellen (Mehr einzustellen ist nicht notwendig) -> OK</li>
+<img src="prdraw2.jpg">
+<li>Nun wird eine Variable gebraucht, in der ich mir den Startpunkt merken kann. Dazu einfach mit der rechten Maustaste auf die Klasse <b>CZeichnerView</b> drücken. <br>-> Member-Variable hinzufügen... <br>-> Variablentyp = CPoint; Variablenname = startpunkt; <br>-> OK<br>
+Und gleich noch eine Variable für den Endpunkt, nun mit dem Namen 'endpunkt' und dem gleichen Variablentyp 'CPoint'.
+</li>
+<img src="prdraw3.jpg">
+<li>Jetzt muss das Ereigniss Maus drücken abgefangen werden. (das heißt selber einen Handler dafür schreiben)<br>
+Ansicht -> Klassen-Assistent
+Klassenname : CZeichnerView<br>
+Nachrichten : WM_LBUTTONDOWN -> Funktion hinzufügen -> Code bearbeiten<br>
+Nun hat man einen Handler, der immer dann aufgerufen wird, wenn die linke Maustaste gedrückt wird.
+</li>
+<img src="prdraw4.jpg">
+<li>Handler sollte so aussehen:
+<pre>
+void CZeichnerView::OnLButtonDown(UINT nFlags, CPoint point)
+{
+	// TODO: Code für die Behandlungsroutine für Nachrichten hier einfügen und/oder Standard aufrufen
+	<b>startpunkt = point;</b>
+	
+	CView::OnLButtonDown(nFlags,point);
+}
+</pre>
+</li>
+<li>Nun brauchen wir noch einen Handler für das Loslassen der Maustaste<br>
+Ansicht -> Klassen-Assistent
+Klassenname : CZeichnerView<br>
+Nachrichten : WM_LBUTTONUP -> Funktion hinzufügen -> Code bearbeiten<br>
+Nun hat man einen Handler, der immer dann aufgerufen wird, wenn die linke Maustaste losgelassen wird.
+</li>
+<li>Handler sollte so aussehen:
+<pre>
+void CZeichnerView::OnLButtonDown(UINT nFlags, CPoint point)
+{
+	// TODO: Code für die Behandlungsroutine für Nachrichten hier einfügen und/oder Standard aufrufen
+	<b>// Merken des Endpunktes
+	endpunkt = point;
+	// Neuzeichnen des Bildschirms veranlassen, ohne dass der Bildschirm vorher gelöscht wird.
+	Invalidate(false);</b>
+	
+	CView::OnLButtonUp(nFlags,point);
+}
+</pre>
+</li>
+<li>
+Da die Variablen für Start- und Endpunkt beim ersten Zeichnen, das schon beim Programmstart ausgeführt wird, undefinierte Werte enthalten können, sollten sie vorher initialisiert werden. Dies wird am Besten im Konstruktor von CZeichnerView erledigt.<br>
+<u>Hinweis:</u><br>
+Konstruktor schaut aus wie Methode (Funktion der Klasse), hat aber keinen Rückgabewert (nicht mal void) und hat den gleichen Namen wie die Klasse. ( in unserem Fall CZeichnerView())<br>
+Der Konstruktor sollte dann so aussehen:
+<pre>
+CZeichnerView::CZeichnerView()
+{
+	// ZU ERLEDIGEN: Hier Code zur Konstruktion einfügen
+	<b>startpunkt = CPoint(0,0);</b>
+	<b>endpunkt = CPoint(0,0);</b>
+}
+</pre>
+</li>
+<li>
+Nun muss das Ganze nur noch gezeichnet werden, und dass passiert in der Methode <b>OnDraw</b> der Klasse CZeichnerView.<br>
+OnDraw sollte dann so aussehen:
+<pre>
+void CZeichnerView::OnDraw(CDC* pDC)
+{
+	CZeichnerDoc* pDoc = GetDocument();
+	ASSERT_VALID(pDoc);
+
+	<b>// Verschiebe Grafikcursor zu Position startpunkt (ohne zu zeichnen)
+	pDC->MoveTo(startpunkt);
+	// Zeichne Linie zum endpunkt
+	pDC->LineTo(endpunkt);</b>
+
+	// ZU ERLEDIGEN: Hier Code zum Zeichnen der ursprünglichen Daten hinzufügen
+}
+</pre>
+</li>
+<li>Fertig</li>
+</ol>
+</html>

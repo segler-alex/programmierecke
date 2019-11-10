@@ -1,0 +1,207 @@
+<html>
+<head>
+<title>Projekt Zeichner</title>
+<link rel="stylesheet" type="text/css" href="../programme.css">
+</head>
+<HR>
+<center><H1>Zeichnen mit MFC Erweiterung 4</H1></center>
+<HR>
+<H2>Einleitung</H2>
+Um diese Anleitung nicht zu lang werden zu lassen, schreibe ich immer nur die Dinge auf, die <b>verändert</b> werden müssen. Bei Codeabschnitten werden die Teile, die von mir verändert wurden fett geschrieben.
+<HR>
+<H2>Beispiel</H2>
+<H3>Aufgabe</H3>
+Das Programm Zeichner soll so erweitert werden, dass nun zusätzlich zu den Strichen auch Kreise und Rechtecke gezeichnet werde können.<br>
+<H3>Lösung in Prosa</H3>
+<H2>Zusätzliche Einführung</H2>
+Vorher war es so, dass ich genau wusste, dass in der Objektliste (CObList) nur Linien (also Variablen(Instanzen) der Klasse Linie) vorhanden waren. Wenn ich also etwas mit GetNext herausholte, konnte ich sicher sein, dass es nichts anderes ist und konnte es desshalb auch ohne Probleme auf den Typ Linie konvertieren.
+Wenn ich es dem Benutzer aber ermöglichen will, auch andere Objekte zu zeichnen, kann ich mir dessen nicht mehr sicher sein. Es entsteht also das Problem, dass ich nicht weiß wenn ich etwas aus der Liste herausnehme, dass ich nicht weiß was es ist.
+<br>
+Für dieses Problem hat C++ eine Lösung: <u>Polymorphie</u><br>
+Das heißt eigentlich nichts anderes, als dass ich eine Basisklasse anfertige (ZeichenObjekt), von der alle zu zeichnenden Objekte (Linie, Ellipse, Rechteck) abgeleitet sind.
+Nun kann ich wenigstens schon mal sicher sein, dass sich in der CObList nur Instanzen der Klasse ZeichenObjekt befinden, selbst wenn sie nur von dieser abgeleitet sind.<br>
+<br>
+Man kann nun in der Basisklasse eine Methode(Funktion) erstellen, die anfänglich einfach nichts tut :-)
+<br>
+Diese kann aber in den abgeleiteten Funktionen überschrieben werden, so dass wenn ich diese Funktion von einer Klasse aufrufe, von der ich nur weiß dass sie ein ZeichenObjekt ist, der Compiler automatisch die Methode der Klasse aufruft (Linie, Ellipse, Rechteck) welchen Typs die Klasse wirklich ist.<br>
+Das kann genutzt werden, um es der jeweiligen Klasse zu überlassen sich selber zu zeichnen.
+<br>
+In der <u>Basisklasse</u> gibts dann einfach eine Methode:<br>
+-> virtual void zeichne(CDC* pDC){}
+virtual bedeutet, dass bei Aufruf der Methode der Basisklasse vom Compiler geprüft wird, ob es sich bei dem Objekt, auf dem diese Methode aufgerufen wird wirklich um ein Objekt der Basisklasse handelt, oder ob es sich um eine abgeleitete Klasse handelt.
+Ist es eine abgeleitete Klasse und wird in dieser Klasse diese Methode überschrieben, dann wird nicht die Methode der Basisklasse sondern die der abgeleiteten Klasse aufgerufen.
+Und in den Klassen, die von ihr ableiten wird diese Methode einfach überschrieben, das heißt es gibt eine Methode mit gleichem Namen und gleichen Parametern:<br>
+-> void zeichne(CDC* pDC){}
+<H2>Nun gehts aber ans programmieren</H2>
+<ol>
+<li>Zuerst wird wie gesagt eine neue Klasse mit dem Namen ZeichenObjekt gebraucht, von der ich dann alle anderen (Linie, Rechteck, Ellipse) ableiten kann.<br>
+<img src='prdraw5.1.jpg'>
+</li>
+<li>Nun werden noch 2 weitere Klassen für Rechteck und Ellipse gebraucht. Diese müssen von der Klasse ZeichenObjekt abgeleitet werden, nicht von CObject.<br>
+Leider kann man die Klasse für die Ellipse nicht Ellipse nennen, weil es diesen Namen schon gibt. Ich nehme desshalb den Namen myEllipse.<br>
+<img src='prdraw5.2.jpg'>
+</li>
+<!--<li>In den nun entstandenen Dateien muss nun die Beschreibung der Klasse von der sie abgeleitet (ZeichenObjekt.h) werden includiert werden, sonst kann man nicht von ihr ableiten, weil er sie nicht kennt.
+</li>-->
+<li>Die Klasse Linie ist aber noch immer von CObject abgeleitet. Sie soll aber genauso wie die Klassen myEllipse und Rechteck von ZeichenObjekt abgeleitet werden.
+Änderungen in der Datei Linie.h
+<pre>
+// Linie.h: Schnittstelle für die Klasse Linie.
+//
+//////////////////////////////////////////////////////////////////////
+
+#if !defined(AFX_LINIE_H__1D1B215B_847B_41F4_B837_877ABE780E17__INCLUDED_)
+#define AFX_LINIE_H__1D1B215B_847B_41F4_B837_877ABE780E17__INCLUDED_
+
+#if _MSC_VER > 1000
+#pragma once
+#endif // _MSC_VER > 1000
+
+<b>#include "ZeichenObjekt.h"</b>
+
+class Linie : public <b>ZeichenObjekt</b>
+{
+public:
+	void Serialize(CArchive &ar);
+	DECLARE_SERIAL(Linie)
+	int dicke;
+	COLORREF farbe;
+	CPoint endpunkt;
+	CPoint startpunkt;
+	Linie();
+	virtual ~Linie();
+
+};
+
+#endif // !defined(AFX_LINIE_H__1D1B215B_847B_41F4_B837_877ABE780E17__INCLUDED_)
+</pre>
+</li>
+<li>Die Klassen Rechteck und myEllipse benötigen nun noch Variable, um sich selber beschreiben zu können.<br>
+Gebrauchte Variable:<br>
+-> Rechteck : int x1,y1,x2,y2 oder ein CRect (hab ich gewählt, da es weniger zu schreiben ist einer statt vier Variablen jeweils einen Wert zuzuweisen)<br>
+-> myEllipse : int x1,y1,x2,y2 oder ein CRect (hab ich gewählt)<br>
+</li>
+<li>Jetzt brauchen wir in der Basisklasse noch die Methode zeichne.<br>
+Da die Methode nur da ist, um von den abgeleiteten Klassen überschrieben zu werden, brauchen wir keinen Code für sie zu implementieren.
+<br>
+<img src='prdraw5.3.jpg'>
+</li>
+<li>Die Methode (muss) nun in allen von der Klasse abgeleiteten Klassen überschrieben werden:<br>
+Sie braucht dort nicht virtual sein.<br>
+<img src='prdraw5.4.jpg'>
+</li>
+<li>In diese Methoden muss nun der Code zum Zeichnen verlagert werden.<br>
+Beispiel für die Linie<br>
+<pre>
+void Linie::zeichne(CDC *pDC)
+{
+<b>	CPen *oldpen,*pen;
+
+	pen = new CPen(PS_SOLID,dicke,farbe);
+	oldpen = pDC->SelectObject(pen);
+
+	pDC->MoveTo(startpunkt);
+	pDC->LineTo(endpunkt);
+
+	pDC->SelectObject(oldpen);
+	delete pen;</b>
+}
+</pre>
+</li>
+<li>Um später die neuen Objekte auch serialisieren zu können, muss in den 3 Klassen, die neu hinzugekommen sind, noch eine Implementierung der Methode Serialize hinzugefügt werden.<br>
+Beispiel für die Klasse myEllipse:<br>
+<pre>
+void myEllipse::Serialize(CArchive &ar)
+{
+<b>	if (ar.IsStoring())
+	{
+		ar << rect;
+	}else
+	{
+		ar >> rect;
+	}</b>
+}
+</pre>
+<br>
+Es müssen auch in allen der Klassen ZeichenObjekt, Rechteck und myEllipse die Makros DECLARE_SERIAL und IMPLEMENT_SERIAL eingefügt werden. In der Klasse Linie muss IMPLEMENT_SERIAL abgeändert werden, weil sie nun nicht mehr von CObject sondern von ZeichenObjekt abgeleitet ist.
+</li>
+<li>Nun möchte sich der spätere Benutzer sicher auch aussuchen wollen, was er jetzt zeichnen möchte. Dazu erstelle ich einfach 3 Buttons in der Symbolleiste. Jeweils einen für Linie, Rechteck, und Ellipse.<br>
+<img src='prdraw5.5.jpg'>
+</li>
+<li>Jetzt wird noch eine Variable gebraucht, in der man sich merkt, was der Benutzer gerade zeichnen will. Am Besten ist es sie in der Klasse CZeichnerView zu erstellen.<br>
+<img src='prdraw5.6.jpg'>
+</li>
+<li>Es fehlen noch Handler, die auf die Buttons reagieren.<br>
+Definitionen in CZeichnerView.h<br>
+<pre>
+#define Z_LINIE		1
+#define Z_RECHTECK	2
+#define Z_ELLIPSE	3
+</pre>
+Beispiel für Handler:<br>
+<pre>
+void CZeichnerView::OnLinie() 
+{
+	// Z_LINIE defininiert in CZeichnerView.h
+	aktuellesObjekt = Z_LINIE;
+}
+
+void CZeichnerView::OnRechteck() 
+{
+	aktuellesObjekt = Z_RECHTECK;
+}
+
+void CZeichnerView::OnEllipse() 
+{
+	aktuellesObjekt = Z_ELLIPSE;
+}
+</pre>
+</li>
+<li>Nun muss nur noch OnDraw geändert werden.<br>
+Es müssen noch einige Dateien in CZeichnerView.cpp includiert werden:<br>
+<pre>
+<b>#include "myEllipse.h"
+#include "Rechteck.h"
+#include "ZeichenObjekt.h"</b>
+</pre>
+Änderung des Konstruktors für CZeichnerView:<br>
+<pre>
+CZeichnerView::CZeichnerView()
+{
+	// ZU ERLEDIGEN: Hier Code zur Konstruktion einfügen,
+	startpunkt = CPoint(0,0);
+	endpunkt = CPoint(0,0);
+
+	strichdicke = 1;
+	// auf Schwarz setzen
+	strichfarbe = RGB(0,0,0);
+<b>	aktuellesObjekt = Z_LINIE;</b>
+}
+</pre>
+Neue OnDraw:<br>
+<pre>
+void CZeichnerView::OnDraw(CDC* pDC)
+{
+	CZeichnerDoc* pDoc = GetDocument();
+	ASSERT_VALID(pDoc);
+
+	POSITION pos;
+<b>	ZeichenObjekt *z;</b>
+	
+	pos = pDoc->ObjektListe.GetHeadPosition();
+
+	while (pos != NULL)
+	{
+		// ZeichenObjekt holen und in Zeiger auf ZeichenObjekt konvertieren
+		z = (<b>ZeichenObjekt*</b>) pDoc->ObjektListe.GetNext(pos);
+		
+<b>		// ZeichenObjekt sich selber zeichnen lassen
+		z->zeichne(pDC);</b>
+	}
+	// ZU ERLEDIGEN: Hier Code zum Zeichnen der ursprünglichen Daten hinzufügen
+}
+</pre>
+</li>
+<li>Fertig</li>
+</ol>
+</html>

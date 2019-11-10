@@ -1,0 +1,138 @@
+<html>
+<head>
+<title>Projekt nonmodal</title>
+<link rel="stylesheet" type="text/css" href="../programme.css">
+</head>
+<HR>
+<center><H1>Nicht modaler Dialog Erweiterung 1</H1></center>
+<center><H3>Eingabefeld, Drehfeld und Slider</H3></center>
+<HR>
+<H2>Einleitung</H2>
+Um diese Anleitung nicht zu lang werden zu lassen, schreibe ich immer nur die Dinge auf, die <b>verändert</b> werden müssen. Bei Codeabschnitten werden die Teile, die von mir verändert wurden fett geschrieben.
+<HR>
+<H2>Beispiel</H2>
+<H3>Aufgabe</H3>
+Das Programm nonmodal soll erweitert werden:<br>
+Auf dem Dialog sollen 3 Steuerelemente eingefügt werden: Eingabefeld, Drehfeld und Slider.<br>
+Diese hängen alle 3 zusammen, dass heißt das Verändern eines Steuerelementes verändert auch die anderen.
+Es können die Zahlen von 1 bis 10 ausgewählt werden.
+<H3>Lösung in Prosa</H3>
+<ol>
+<li>Zuerst müssen dem Dialog die Steuerelemente hinzugefügt werden:<br>
+-> Auf die Ressourcenansicht wechseln<br>
+<img src="nonmodal2.1.jpg"><br>
+</li>
+<li>Member Variablen für die Steuerelemente hinzufügen:<br>
+-> Klassenassistent, Member-Variablen<br>
+-> für das Drehfeld (SPIN) wird nur wegen eines MFC-Fehlers eine MemberVariable benötigt: Die Nummer wird größer, wenn man nach unten drückt und umgekehrt :-)<br>
+<img src="nonmodal2.2.jpg"><br>
+-> da die variable für das Eingabeld den Datentyp UINT hat, kann wie bei allen nummerischen Datentypen, bei kleinster und größter Wert eine Wertbeschränkung eingegeben werden, in unserem Fall 1 und 10.<br>
+<img src="nonmodal2.3.jpg"><br>
+</li>
+<li>Um das Drehfeld mit dem Eingabefeld zu verbinden, braucht man nur folgende Schritte ausführen:<br>
+-> Menü Layout, Tabulator-Reihenfolge<br>
+-> Eingabefeld und Drehfeld müssen in der Reihenfolge hintereinander sein z.B.: Eingabefeld=1, Drehfeld=2<br>
+-> In den Eigenschaften des Drehfelds auf Formate wechseln und die Punkte 'Autom. Buddy' und 'Buddy-Ganzzahl setzen' aktivieren.<br>
+<img src="nonmodal2.4.jpg">
+</li>
+<li>Um den MFC-Fehler des Drehfelds zu beseitigen muss noch die Funktion OnInitDialog überschrieben werden:<br>
+-> Klassenassistent<br>
+-> Klassenname : dialog<br>
+-> Nachricht : WM_INITDIALOG<br>
+-> Funktion hinzufügen<br>
+-> Code bearbeiten<br>
+<img src="nonmodal2.5.jpg"><br>
+<pre>
+BOOL dialog::OnInitDialog() 
+{
+	CDialog::OnInitDialog();
+
+<b>	// Anfangswert setzen
+	m_eingabefeld = 1;
+	// In den Dialog schreiben
+	UpdateData(false);
+
+	// Beseitigen des MFC-Fehlers
+	// Nach unten drücken Zahl wird aber größer
+	// Parameter 1 : Kleinster Wert des Drehfelds
+	// Parameter 2 : Größter Wert des Drehfelds
+	m_spin.SetRange(1,10);
+	
+	// Die Werte werden eingegrenzt,
+	// wichtig für die grafische Darstellung des sliders
+	m_slider.SetRange(1,10);</b>
+
+	return TRUE;  // return TRUE unless you set the focus to a control
+	              // EXCEPTION: OCX-Eigenschaftenseiten sollten FALSE zurückgeben
+}
+</pre>
+</li>
+<li>Das Drehfeld und das Eingabefeld arbeiten nun schon zusammen, jetzt müssen noch Eingabefeld und Slider zusammenarbeiten. Zuerst programmier, dass sich das Eingabefeld automatisch verändert, wenn der Slider bewegt wird.<br>
+Dazu muss der Händler überschrieben werden, der aufgerufen wird, wenn der Slider bewegt wird : WM_HSCROLL.<br>
+Achtung:Dieser Handler wird für alle horizontalen slider und Bildlaufleisten aufgerufen. Sind mehrere vorhanden, muss entweder jedes Mal geprüft werden welcher den Handler ausgelöst hat, oder die einfachere Variante ist einfach alle zu bearbeiten ( so machs ich :-).<br>
+-> Klassenassistent<br>
+-> Klassenname : dialog<br>
+-> Nachricht : WM_HSCROLL<br>
+-> Funktion hinzufügen...<br>
+-> Code bearbeiten<br>
+<img src="nonmodal2.6.jpg"><br>
+<pre>
+void dialog::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar) 
+{
+	// TODO: Code für die Behandlungsroutine für Nachrichten hier einfügen und/oder Standard aufrufen
+<b>	int wert;
+
+	// Aktuellen Wert des Sliders auslesen
+	wert = m_slider.GetPos();
+
+	// Wert in das Eingabefeld speichern
+	m_eingabefeld = wert;
+	// Weil eingabefeld eine uint variable ist
+	// und keine Controlvariable
+	// muss noch updatedata aufgerufen werden,
+	// für das wirkliche darstellen der Zahl im Dialog
+	UpdateData(false);</b>
+	
+	CDialog::OnHScroll(nSBCode, nPos, pScrollBar);
+}
+</pre>
+</li>
+<li>Jetzt muss noch der Handler des Eingabefeldes bearbeitet werden, der jedes Mal bei Änderung des Eingabefeldes die Position des Sliders korrigiert:<br>
+-> Klassenassistent<br>
+-> Klassenname : dialog<br>
+-> Objekt-ID : IDC-EDIT1<br>
+-> Nachricht : EN_CHANGE<br>
+-> Funktion hinzufügen, Code bearbeiten<br>
+<img src="nonmodal2.7.jpg"><br>
+<pre>
+void dialog::OnChangeEdit1() 
+{
+	// TODO: Wenn dies ein RICHEDIT-Steuerelement ist, sendet das Steuerelement diese
+
+<b>	// Nur wenns den Slider schon gibt
+	// stürzt sonst ab, wenn mans nicht abfragt
+	if (m_slider.GetSafeHwnd() != NULL)
+	{
+		// Eintragen der Werte am Dialog in die
+		// dazugehörigen Member-Variablen
+		UpdateData(true);
+
+		// Slider neu setzen
+		m_slider.SetPos(m_eingabefeld);
+	}</b>
+
+	// Benachrichtigung nicht, bevor Sie nicht die Funktion CDialog::OnInitDialog()
+
+	// überschreiben und CRichEditCrtl().SetEventMask() aufrufen, wobei
+
+	// eine ODER-Operation mit dem Attribut ENM_CHANGE und der Maske erfolgt.
+
+	
+
+	// TODO: Fügen Sie hier Ihren Code für die Benachrichtigungsbehandlungsroutine des Steuerelements hinzu
+}
+</pre>
+</li>
+<li>Fertig</li>
+</ol>
+</html>

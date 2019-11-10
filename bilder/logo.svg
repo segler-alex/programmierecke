@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN"
+"http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   id="svg1"
+   sodipodi:version="0.32"
+   inkscape:version="0.37"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   width="16cm"
+   height="8.7cm"
+   sodipodi:docbase="/home/alex/HP/bilder"
+   sodipodi:docname="logo.svg">
+  <defs
+     id="defs3" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1.84778936"
+     inkscape:cx="266.489208"
+     inkscape:cy="151.978414"
+     inkscape:window-width="1022"
+     inkscape:window-height="694"
+     inkscape:window-x="0"
+     inkscape:window-y="26"
+     showgrid="true"
+     vertgrid="true"
+     snaptogrid="true"
+     horizgrid="true" />
+  <rect
+     style="font-size:12;fill:#0000ff;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;"
+     id="rect575"
+     width="491.74014282"
+     height="114.80314636"
+     x="57.47245560"
+     y="158.03148297" />
+  <text
+     xml:space="preserve"
+     style="fill:black;fill-opacity:1;stroke:none;font-family:helvetica;font-style:normal;font-weight:normal;font-size:12px;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;"
+     x="19.5478217"
+     y="30.6296196"
+     id="text579"
+     transform="scale(3.849163,7.694707)"><tspan
+       id="tspan580">programmierecke.NET</tspan></text>
+  <polygon
+     sodipodi:type="star"
+     style="font-size:12;fill:#ffa100;fill-opacity:0.645503;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;"
+     id="polygon574"
+     sodipodi:sides="5"
+     sodipodi:cx="70.7952741"
+     sodipodi:cy="156.897634"
+     sodipodi:r1="57.8463074"
+     sodipodi:r2="28.9231537"
+     sodipodi:arg1="0.97361967"
+     sodipodi:arg2="1.60193820"
+     points="103.323,204.732 69.8947,185.807 35.3534,202.615 43.0228,164.975 16.3634,137.318 54.5315,132.98 72.5964,99.0794 88.5162,134.039 126.34,140.744 98.0112,166.688 103.323,204.732 "
+     transform="translate(1.353107,-2.763785)" />
+  <polygon
+     sodipodi:type="star"
+     style="font-size:12;fill:#ffff00;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;"
+     id="polygon582"
+     sodipodi:sides="5"
+     sodipodi:cx="309.829687"
+     sodipodi:cy="255.118094"
+     sodipodi:r1="44.0780204"
+     sodipodi:r2="22.0390102"
+     sodipodi:arg1="0.50576703"
+     sodipodi:arg2="1.13408556"
+     points="348.389,276.473 319.151,275.089 301.436,298.389 293.717,270.155 266.082,260.506 290.55,244.441 291.186,215.177 314.027,233.482 342.055,225.045 331.703,252.424 348.389,276.473 " />
+  <polygon
+     sodipodi:type="star"
+     style="font-size:12;fill:#ffff00;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;"
+     id="polygon583"
+     sodipodi:sides="5"
+     sodipodi:cx="540.510742"
+     sodipodi:cy="131.102346"
+     sodipodi:r1="40.8546611"
+     sodipodi:r2="20.4273306"
+     sodipodi:arg1="1.26639194"
+     sodipodi:arg2="1.89471047"
+     points="552.756,170.079 534.009,150.467 507.226,154.793 520.084,130.903 507.694,106.767 534.388,111.614 553.514,92.3723 557.153,119.257 581.363,131.501 556.919,143.27 552.756,170.079 "
+     transform="translate(-1.215063,24.05149)" />
+</svg>

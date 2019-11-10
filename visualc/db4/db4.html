@@ -1,0 +1,104 @@
+<html>
+	<HEAD>
+		<title>Projekt Datenbank 4</title>
+		<link rel="stylesheet" type="text/css" href="../programme.css">
+	</HEAD>
+  <BODY>
+		<HR>
+		<center><H1>Datenbankbeispiel 4</H1></center>
+		<HR>
+		<H2>Einleitung</H2>
+		Um diese Anleitung nicht zu lang werden zu lassen, schreibe ich immer nur die Dinge auf, die <b>verändert</b> werden müssen. Bei Codeabschnitten werden die Teile, die von mir verändert wurden fett geschrieben.
+		<HR>
+		<H2>Beispiel</H2>
+		<H3>Aufgabe</H3>
+	  Es sollten vor Beginn dieses Projekts die Maßnahmen getroffen werden, die im Kapitel "Datenbankzugriff Vorbereitung" angegeben sind.<br>
+	  <BR>
+	  <p>
+			<table summary="" width="60%"><tr><td>
+			Erstellen Sie ein Programm, welches ein TreeControl enthält.<br>
+      In diesem TreeControl werden an oberer Hierarchieebene die unterschiedliche Werte des Attributs "BestellteAnzahl" der Tabelle "Artikel" eingetragen. Als Unterpunkte dieser Einträge werden die Werte des Attributs "Artikelname" eingetragen.
+			</td></tr></table>
+		</p>
+    <H3>Lösung in Prosa</H3>
+	<ol>
+		<li>Zuerst einmal ein neues Projekt anlegen:
+			<ul>
+				<li>Schritt 1 : SDI - Anwendung</li>
+        <li>Schritt 2 : Datenbankansicht ohne Dateiunterstützung<br>
+				<img src="db4.1.jpg" alt=""><br>
+        Auf "Datenquelle" drücken.<br>
+				<img src="db4.2.jpg" alt=""><br>
+        Nun muss die Tabelle ausgewählt werden, die für das Datenbankprojekt gebraucht wird.<br>
+				<img src="db4.3.jpg" alt=""></li>
+				<li>Schritt 6 : CRecordView<br>
+				<img src="db4.4.jpg" alt=""></li>
+			</ul>
+		</li>
+		<li>Zeichnen des Dialogs:<br>
+    	Es werden nur ein TreeControl benötigt.<br>
+			<img src="db4.5.jpg" alt=""><br><br>
+      Um die Linien und Schaltflächen beim TreeControl zu erhalten, braucht man nur die Eigenschaften zu editieren:<br>
+      <img src="db4.6.jpg" alt="">
+		</li>
+    <li>Es wird noch eine Membervariable für den TreeControl benötigt.<br>
+    	Dazu muss der Klassenassistent geöffnet werden.<br>
+      <img src="db4.7.jpg" alt="">
+    </li>
+    <li>Nun muss das TreeControl beim Start des Programms noch mit den Daten befüllt werden.<br>
+    	<pre>
+void CDb4View::OnInitialUpdate()
+{
+	m_pSet = &GetDocument()->m_db4Set;
+	CRecordView::OnInitialUpdate();
+	GetParentFrame()->RecalcLayout();
+	ResizeParentToFit();
+
+<b>	CString zwsp;
+
+	// Sicherstellen das Datenbank offen ist
+	if (!m_pSet->IsOpen())
+		m_pSet->Open();
+
+	// Sortieren der Tabelle nach "BestellteEinheiten"
+	// Dies ist der Teil der SQL-Klausel, der nach SORT BY kommt
+	m_pSet->m_strSort = "[BestellteEinheiten]";
+
+	// Neu laden des CRecordSet, um die Sortierung aktiv werden zu lassen
+	m_pSet->Requery();
+
+	// Variable für das Attribut "BestellteEinheiten" des letzten Datensatzes
+	int oldanzahl=-1;
+	// Variable für das Item der TreeControl bei dem Untereinträge
+	// angehängt werden
+	HTREEITEM parent;
+
+	// Solange noch Einträge in der Tabelle vorhanden sind
+	while (!m_pSet->IsEOF())
+	{
+		// nur wenn dieser Parent (Bestellte Einheiten) in der TreeControl
+		// noch nicht existiert..
+		if (oldanzahl != m_pSet->m_BestellteEinheiten)
+		{
+			// neue Bestellte Einheiten merken
+			oldanzahl = m_pSet->m_BestellteEinheiten;
+			// in String umwandeln
+			zwsp.Format("%d",m_pSet->m_BestellteEinheiten);
+			// als neuer parent in die TreeControl einfügen
+			parent = m_tree.InsertItem(zwsp);
+		}
+		// Artikelname als Child von dem aktuellen parent einfügen
+		m_tree.InsertItem(m_pSet->m_Artikelname,parent);
+		// zum nächsten Datensatz springen
+		m_pSet->MoveNext();
+	}
+
+	// Diese Einfügemethode funktioniert nur, weil die Datensätze
+	// vorher sortiert wurden</b>
+}
+      </pre>
+    </li>
+		<li>Fertig</li>
+	</ol>
+  </BODY>
+</html>

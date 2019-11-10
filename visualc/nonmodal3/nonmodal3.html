@@ -1,0 +1,99 @@
+<html>
+<head>
+<title>Projekt nonmodal</title>
+<link rel="stylesheet" type="text/css" href="../programme.css">
+</head>
+<HR>
+<center><H1>Nicht modaler Dialog Erweiterung 2</H1></center>
+<center><H3>Eingabefeld und Bildlaufleiste</H3></center>
+<HR>
+<H2>Einleitung</H2>
+Um diese Anleitung nicht zu lang werden zu lassen, schreibe ich immer nur die Dinge auf, die <b>verändert</b> werden müssen. Bei Codeabschnitten werden die Teile, die von mir verändert wurden fett geschrieben.
+<HR>
+<H2>Beispiel</H2>
+<H3>Aufgabe</H3>
+Das Programm nonmodal soll erweitert werden:<br>
+Auf dem Dialog sollen 3 Steuerelemente eingefügt werden: Eingabefeld und Bildlaufleiste<br>
+Diese hängen alle 2 zusammen, dass heißt das Verändern eines Steuerelementes verändert auch das andere.
+Es können die Zahlen von 1 bis 10 ausgewählt werden.
+<H3>Lösung in Prosa</H3>
+<ol>
+<li>Es geht im Grunde genau gleich wie, beim Slider nur muss ein bisschen mehr selber getan werden:<br>
+<img src="nonmodal3.1.jpg">
+</li>
+<li>Änderungen in der Methode OnInitDialog der Klasse dialog:<br>
+<pre>
+BOOL dialog::OnInitDialog() 
+{
+	CDialog::OnInitDialog();
+
+	// Anfangswert setzen
+	m_eingabefeld = 1;
+<b>	m_eingabefeld2 = 1;</b>
+	// In den Dialog schreiben
+	UpdateData(false);
+
+	// Beseitigen des MFC-Fehlers
+	// Nach unten drücken Zahl wird aber größer
+	// Parameter 1 : Kleinster Wert des Drehfelds
+	// Parameter 2 : Größter Wert des Drehfelds
+	m_spin.SetRange(1,10);
+
+	// Die Werte werden eingegrenzt,
+	// wichtig für die grafische Darstellung des sliders
+	m_slider.SetRange(1,10);
+
+<b>	// das gleiche für die Scrollbar
+	m_scrollbar.SetScrollRange(1,10);</b>
+
+	return TRUE;  // return TRUE unless you set the focus to a control
+	              // EXCEPTION: OCX-Eigenschaftenseiten sollten FALSE zurückgeben
+}
+</pre>
+</li>
+<li>Änderungen beim Handler für WM_HSCROLL<br>
+<pre>
+void dialog::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar) 
+{
+	// TODO: Code für die Behandlungsroutine für Nachrichten hier einfügen und/oder Standard aufrufen
+	int wert;
+
+	// Auslesen des aktuellen Wertes des der bewegten ScrollBar
+<b>	int scrollpos = pScrollBar->GetScrollPos();
+	// Was ist passiert, und selber wert verändern
+	switch(nSBCode){
+	case SB_PAGELEFT:scrollpos /= 2;	break;
+	case SB_LINELEFT:scrollpos--;		break;
+	case SB_PAGERIGHT:scrollpos *= 2;	break;
+	case SB_LINERIGHT:scrollpos++;		break;
+	// Für das ziehen der Scrollbar wird aktuelle Position in nPos übergeben
+	case SB_THUMBTRACK:scrollpos=nPos;	break;
+	}
+	// Neuen Wert der Scrollbar setzen, und neuzeichnen=true
+	pScrollBar->SetScrollPos(scrollpos,true);</b>
+
+	// Aktuellen Wert des Sliders auslesen
+	wert = m_slider.GetPos();
+	
+	// Wert in das Eingabefeld speichern
+	m_eingabefeld = wert;
+
+<b>	// Auslesen des aktuellen Wertes der Scrollbar
+	wert = m_scrollbar.GetScrollPos();
+
+	// Wert in das 2. Eingabefeld eintragen
+	m_eingabefeld2 = wert;</b>
+
+	// Weil eingabefeld eine uint variable ist
+	// und keine Controlvariable
+	// muss noch updatedata aufgerufen werden,
+	// für das wirkliche darstellen der Zahl im Dialog
+	UpdateData(false);
+	
+	CDialog::OnHScroll(nSBCode, nPos, pScrollBar);
+}
+</pre>
+</li>
+<li>Fertig</li>
+</ol>
+</html>

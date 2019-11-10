@@ -1,0 +1,173 @@
+<html>
+<head>
+<title>Projekt Zeichner</title>
+<link rel="stylesheet" type="text/css" href="../programme.css">
+</head>
+<HR>
+<center><H1>Zeichnen mit MFC Erweiterung 2</H1></center>
+<HR>
+<H2>Einleitung</H2>
+Um diese Anleitung nicht zu lang werden zu lassen, schreibe ich immer nur die Dinge auf, die <b>verändert</b> werden müssen. Bei Codeabschnitten werden die Teile, die von mir verändert wurden fett geschrieben.
+<HR>
+<H2>Beispiel</H2>
+<H3>Aufgabe</H3>
+Das Programm Zeichner soll so erweitert werden, dass jeder Strich in einer CObjectList gespeichert wird. Dazu wird eine Klasse Strich gebraucht, in der jeweils ein Strich mit allen Information (startpunkt, endpunkt, strichdicke, strichfarbe) gespeichert wird.
+<H3>Lösung in Prosa</H3>
+<ol>
+<li>Zuerst wird eine Neue Klasse für einen Strich gebraucht.<br>
+-> Einfügen<br>
+-> Neue Klasse...<br>
+-> Allgemeine Klasse<br>
+-> Klassenname : Linie<br>
+-> Abgeleitet von CObject<br>
+-> Sollte nach bestätigen mit OK ein Fehlerdialog erscheinen einfach auf OK drücken(unwichtig :-)<br>
+<img src="prdraw3.1.jpg">
+</li>
+<li>Hinzufügen von Member-Variablen zur Klasse Linie zur vollständigen Beschreibung einer Linie:<br>
+<ol type=I>
+<li>mit der rechten Maustaste auf die Klasse Linie klicken, Member-Variable hinzufügen...<br>(Mehrmals wiederholen)</li>
+<li>Variablenname=startpunkt; Variablentyp=CPoint</li>
+<li>Variablenname=endpunkt; Variablentyp=CPoint</li>
+<li>Variablenname=farbe; Variablentyp=COLORREF</li>
+<li>Variablenname=dicke; Variablentyp=int</li>
+</ol>
+</li>
+<li>Includieren der Headerdatei der Klasse Linie in die Datei CZeichnerView.cpp und CZeichnerDoc.cpp:<br>
+-> CZeichnerView.cpp:
+<pre>
+// ZeichnerView.cpp : Implementierung der Klasse CZeichnerView
+//
+
+#include "stdafx.h"
+#include "Zeichner.h"
+
+#include "ZeichnerDoc.h"
+#include "ZeichnerView.h"
+#include "StrichDialog.h"
+<b>#include "Linie.h"</b>
+
+#ifdef _DEBUG
+#define new DEBUG_NEW
+#undef THIS_FILE
+static char THIS_FILE[] = __FILE__;
+#endif
+</pre>
+-> CZeichnerDoc.cpp:
+<pre>
+// ZeichnerDoc.cpp : Implementierung der Klasse CZeichnerDoc
+//
+
+#include "stdafx.h"
+#include "Zeichner.h"
+
+#include "ZeichnerDoc.h"
+<b>#include "Linie.h"</b>
+
+#ifdef _DEBUG
+#define new DEBUG_NEW
+#undef THIS_FILE
+static char THIS_FILE[] = __FILE__;
+#endif
+</pre>
+</li>
+<li>Hinzufügen einer Variable des Typs CObjectList zu der Klasse CZeichnerDoc:<br>
+Wichtig: Daten sollten immer in der Klasse CZeichnerDoc abgelegt werden, weil das von Windows so vorgesehen ist. (z.B.: Speicher-/Ladefunktion befindet sich hier)<br>
+<ol type=I>
+<li>Mit rechter Maustaste auf Klasse CZeichnerDoc klicken, Member-Variable hinzufügen...</li>
+<li>Variablentyp=CObjectList Variablenname=ObjektListe</li>
+</ol>
+</li>
+<li>Nun muss jedes Mal, wenn ein neuer Strich gezeichnet wird, dieser zur ObjektListe hinzugefügt werden:<br>
+Dazu muss der Handler für das Loslassen der Maustaste abgeändert werden. (in der Klasse CZeichnerView; Methode OnLButtonUp)<br>
+Der Handler sollte dann so ungefähr aussehen:
+<pre>
+void CZeichnerView::OnLButtonUp(UINT nFlags, CPoint point) 
+{
+	// TODO: Code für die Behandlungsroutine für Nachrichten hier einfügen und/oder Standard aufrufen
+
+<b>	// Holen der Dokumentklasse
+	// wird gebraucht, weil sich dort die ObjektListe befindet
+	CZeichnerDoc* pDoc = GetDocument();
+	// Prüfe, ob pDoc != NULL, sonst wirf Exception
+	ASSERT_VALID(pDoc);
+
+	// Neue Linie anlegen
+	Linie *l = new Linie();
+
+	// Merken des Endpunktes, eigentlich sinnlos,
+	// weil sowieso gleich wieder woanders gebraucht
+	// Trotzdem zur besseren Übersicht</b>
+	endpunkt = point;
+
+<b>	// Zuweisen der aktuellen Eigenschaften der Linie
+	l->dicke = strichdicke;
+	l->startpunkt = startpunkt;
+	l->endpunkt = endpunkt;
+	l->farbe = strichfarbe;
+
+	// Anfügen der Linie am Ende der ObjektListe
+	pDoc->ObjektListe.AddTail(l);</b>
+
+	// Neuzeichnen aller Elemente, vorher löschen des Bildschirms
+	Invalidate(<b>true</b>);
+	
+	CView::OnLButtonUp(nFlags, point);
+}
+</pre>
+</li>
+<li>Dass alle Elemente der Liste ObjektListe wirklich gezeichnet werden, muss noch die Methode OnDraw der Klasse CZeichnerView angepasst werden:<br>
+<pre>
+void CZeichnerView::OnDraw(CDC* pDC)
+{
+	CZeichnerDoc* pDoc = GetDocument();
+	ASSERT_VALID(pDoc);
+
+	CPen *oldpen,*newpen;
+	<b>POSITION pos;
+	Linie *l;
+	
+	pos = pDoc->ObjektListe.GetHeadPosition();
+
+	while (pos != NULL)
+	{
+		// Linie holen und in Zeiger auf Linie konvertieren
+		l = (Linie*) pDoc->ObjektListe.GetNext(pos);</b>
+		// Neuen Zeichenstift anlegen mit Informationen aus Linie
+		newpen = new CPen(PS_SOLID,<b>l->dicke</b>,<b>l->farbe</b>);
+		// Neuen Stift einstellen, alten merken
+		oldpen = pDC->SelectObject(newpen);
+
+		// Verschiebe Grafikcursor zu Position startpunkt (ohne zu zeichnen)
+		pDC->MoveTo(<b>l->startpunkt</b>);
+		// Zeichne Linie zum endpunkt
+		pDC->LineTo(<b>l->endpunkt</b>);
+
+		// wieder alten Stift einstellen
+		pDC->SelectObject(oldpen);
+		// neuen Stift wieder löschen
+		delete newpen;
+	<b>}</b>
+	// ZU ERLEDIGEN: Hier Code zum Zeichnen der ursprünglichen Daten hinzufügen
+}
+</pre>
+</li>
+<li>Für guten Programmierstil sollten alle Linien beim Beenden des Programmes wieder entfernt werden. Dies wird am Besten im Destruktor von CZeichnerDoc erledigt.<br>
+Hinweis: Ein Destruktor einer Klasse hat keinen Rückgabewert(nicht mal void) und hat den Namen '~'+Name der Klasse. Er wird beim Zerstören der Klasse automatisch aufgerufen.<br>
+<pre>
+CZeichnerDoc::~CZeichnerDoc()
+{
+<b>	POSITION pos = ObjektListe.GetHeadPosition();
+
+	// Löschen jeder einzelnen Linie,
+	// weil sie nicht automatisch gelöscht werden
+	while (pos != NULL)
+		delete (Linie*)ObjektListe.GetNext(pos);
+	
+	// Löschen der Verweise auf die Linien in der Liste
+	ObjektListe.RemoveAll();</b>
+}
+</pre>
+</li>
+<li>Fertig</li>
+</ol>
+</html>

@@ -1,0 +1,136 @@
+<html>
+<head>
+<title>Projekt nonmodal</title>
+<link rel="stylesheet" type="text/css" href="../programme.css">
+</head>
+<HR>
+<center><H1>Nicht modaler Dialog</H1></center>
+<HR>
+<H2>Einleitung</H2>
+Um diese Anleitung nicht zu lang werden zu lassen, schreibe ich immer nur die Dinge auf, die <b>verändert</b> werden müssen. Bei Codeabschnitten werden die Teile, die von mir verändert wurden fett geschrieben.
+<HR>
+<H2>Beispiel</H2>
+<H3>Aufgabe</H3>
+Es soll ein nicht modaler Dialog erstellt werden. (Kurz und schmerzlos :-)<br>
+Dieser Dialog soll diesmal nicht von der Symbolleiste, sondern von einem Menüpunkt aufgerufen werden können.
+<H3>Lösung in Prosa</H3>
+<ol>
+<li>Zuerst wird ein neues Projekt gebraucht...<br>
+-> Projektname : nonmodal<br>
+-> SDI Anwendung<br>
+</li>
+<li>Dann braucht man wie beim modalen Dialog eine Dialog-Ressource:<br>
+-> Auf die Ressourcenansicht wechseln<br>
+-> Rechte Maustaste auf Dialog<br>
+-> Dialog einfügen<br>
+</li>
+<li>Ich lass den Dialog mal leer, für dieses Beispiel ist es nicht notwendig Steuerelemente einzufügen, weil das genauso geht, wie beim modalen Dialog:<br>
+-> Den Klassen-Assistenten aufrufen<br>
+-> es wird automatisch eine Klasse für den Dialog erstellt...<br>
+<img src="nonmodal1.jpg"><br>
+<img src="nonmodal2.jpg"><br>
+</li>
+<li>Die Datei in der sich die neue Klasse befindet muss noch in die Datei CnonmodalView.h includiert werden:<br>
+die Datei nonmodalView.h sollte so aussehen:<br>
+<pre>
+// nonmodalView.h : Schnittstelle der Klasse CNonmodalView
+//
+/////////////////////////////////////////////////////////////////////////////
+
+#if !defined(AFX_NONMODALVIEW_H__01C1A223_FB65_45AA_9668_C87CB57D5471__INCLUDED_)
+#define AFX_NONMODALVIEW_H__01C1A223_FB65_45AA_9668_C87CB57D5471__INCLUDED_
+
+#if _MSC_VER > 1000
+#pragma once
+#endif // _MSC_VER > 1000
+
+#include "dialog.h"
+
+
+class CNonmodalView : public CView
+{
+	etc...
+</pre>
+</li>
+<li>Variable für den Dialog zur Klasse CnonmodalView hinzufügen:<br>
+-> mit der rechten Maustaste auf die Klasse CnonmodalView drücken<br>
+-> auf Member-Variable hinzufügen... drücken<br>
+<img src="nonmodal3.jpg">
+</li>
+<li>Varable muss im Konstruktor initialisiert werden:<br>
+<pre>
+CNonmodalView::CNonmodalView()
+{
+	// ZU ERLEDIGEN: Hier Code zur Konstruktion einfügen,
+	<b>dia = NULL;</b>
+}
+</pre>
+</li>
+<li>Nun brauchen wir einen Eintrag in der Menüleiste:<br>
+-> Auf die Ressourcenansicht wechseln<br>
+-> auf Menü doppelt klicken<br>
+-> auf IDR_MAINFRAME doppelt klicken<br>
+<img src="nonmodal4.jpg"><br>
+-> Einen neuen Eintrag hinzufügen mit dem Namen : Dialog. Nun Popup deaktivieren und eine ID eingeben (selber aussuchen; ist egal was). Hinweis : dadurch wird der Button im Menü zu einem wirklichen Button, das heißt es geht beim Klick kein Menü auf wie sonst.<br>
+-> Sich die eben vergebene ID merken<br>
+<img src="nonmodal5.jpg"><br>
+</li>
+<li>Klassenassistenten öffnen:<br>
+-> Klassenname CnonmodalView einstellen<br>
+-> nach der ID suchen<br>
+-> Funktion hinzufügen drücken<br>
+<img src="nonmodal6.jpg"><br>
+-> Code bearbeiten drücken<br>
+<pre>
+void CNonmodalView::OnDialog() 
+{
+	<b>// Nur das erste Mal Dialog erstellen
+	if (dia == NULL)
+	{
+		// Objekt für Dialog erstellen
+		dia = new dialog();
+	}
+
+	// Wenn Dialog gerade nicht läuft
+	if (dia->GetSafeHwnd() == NULL)
+	{
+		// Dialog in Windows erstellen
+		// Die MFC braucht des
+		// 1. Parameter : Klassenname.IDD liefert Ressource-ID vom DIALOG
+		// 2. Parameter : Zeicher auf die View, muss so sein
+		dia->Create(dialog.IDD,this);
+		// Zeige Dialog
+		dia->ShowWindow(true);
+	}</b>
+}
+</pre>
+</li>
+<li>Um den Dialog zu zerstören müssen noch die beiden Handler für den OK und den Abbrechen Button in der Dialogklasse dialog geändert werden.<br>
+-> Klassenassistent<br>
+-> Klassenname = dialog<br>
+-> IDOK suchen, Funktion hinzufügen, Code bearbeiten<br>
+<pre>
+void dialog::OnOK() 
+{
+	CDialog::OnOK();
+
+<b>	// Dialog zerstören
+	DestroyWindow();</b>
+}
+</pre>
+-> Klassenassistent<br>
+-> Klassenname = dialog<br>
+-> IDCANCEL suchen, Funktion hinzufügen, Code bearbeiten<br>
+<pre>
+void dialog::OnCancel() 
+{
+	CDialog::OnCancel();
+
+<b>	// Dialog zerstören
+	DestroyWindow();</b>
+}
+</pre>
+</li>
+<li>Fertig</li>
+</ol>
+</html>
