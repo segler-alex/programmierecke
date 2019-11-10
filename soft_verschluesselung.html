@@ -1,390 +1,429 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html lang="de"><head>
+<html lang="de">
 
-  <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>Programmierecke.NET</title>
-  
+<head>
+
+  <meta content="text/html; charset=UTF-8" http-equiv="content-type">
+  <title>Programmierecke.NET</title>
+
   <meta content="segler_alex" name="author">
   <meta content="Programmier Software Links" name="description">
-  <link title="Default" rel="stylesheet" href="styles/default.css" type="text/css"></head><body>
-<h1>Verschlüsselung (Private/Public Key Verfahren)</h1>
-Eine der finde ich besten Methoden etwas zu verschlüsseln ist
-es, nicht symetrische Schlüssel zu verwenden. Hier einige
-Programme dazu. Der Grund ist, dass die Schlüsselverwaltung nicht
-zentral, zB vom Staat oder einem Unternehmen erledigt wird, sondern
-jeder seinen eigenen Schlüssel (in Wirklichkeit ein
-Schlüsselpaar) erzeugen kann. Dies hört sich vielleicht
-anfangs etwas unsicher an, ist aber bei näherer Betrachtung die
-Fortsetzung des Postgeheimnisses im Internet!<br>
-Eine E-Mail kann auf dem Weg zum Empfänger abgefangen werden. Ist
-diese jedoch verschlüsselt, kann der Spion nichts damit anfangen.
-Nur der richtige Empfänger kann diese E-Mail je wieder
-entschlüsseln. (Ja ich weiß, wenn ich 100000 Jahre Zeit hab,
-dann kann ich sie auch ohne Schlüssel entschlüsseln, aber wer
-hat das schon ;-)<br>
-<h2>Programme</h2>
-<table style="width: 100%; text-align: left;" border="0" cellpadding="2" cellspacing="2">
-  <tbody>
-    <tr>
-      <th>Name<br>
-      </th>
-      <th>Beschreibung<br>
-      </th>
-      <th>OS<br>
-      </th>
-      <th>Lizenz<br>
-      </th>
-      <th>Sprache<br>
-      </th>
-    </tr>
-    <tr>
-      <td class="odd"><a target="_blank" href="http://gnupg.org">GnuPG</a><br>
-      </td>
-      <td class="odd">Eine
-freie Alternative zu PGP. Es beinhaltet nur
-Kommandozeilenprogramme. Grafische Frontends gibt es extra. (Weiter
-unten auf der Seite, z.B.: GPA, WinPT)<br>
-      </td>
-      <td class="odd">Linux,
-FreeBSD, OpenBSD, NetBSD, Windows 95/98/NT/2000/ME/XP,
-Pocket PC, MacOS X </td>
-      <td class="odd">GPL<br>
-      </td>
-      <td class="odd">GER,
-ENG, FRA<br>
-      </td>
-    </tr>
-    <tr>
-      <td class="even"><a target="_blank" href="http://www.pgp.com">PGP</a><br>
-      </td>
-      <td class="even">Dieses
-war das erste Programm, das sich mit dem Problem der
-Verschlüsselung von Nachrichten speziell für Private
-befasste. Wurde aber von einer Firma gekauft. Diese bietet zwar eine
-Freeware Version für Private an, diese sollte jedoch nicht
-mehr
-verwendet verden weil es bessere/freie/OpenSource Alternativen (GnuPG)
-gibt. Außerdem garantiert der ursprüngliche
-Initiator des
-Programms in der derzeitigen Version nicht mehr für die
-Sicherheit
-des einzelnen (Drittschlüssel). Ich führe es hier nur
-der
-Vollständigkeit halber an.</td>
-      <td class="even">Windows</td>
-      <td class="even">Freeware für Private</td>
-      <td class="even">ENG,GER</td>
-    </tr>
-    <tr>
-      <td class="odd"><a target="_blank" href="http://www.gnupt.de/wp/">WinPT</a></td>
-      <td class="odd">Ein guter Frontend für GnuPG. Die Seite beinhaltet auch ein paar schöne Einführungsvideos.</td>
-      <td class="odd">Windows</td>
-      <td class="odd">GPL</td>
-      <td class="odd">ENG, GER</td>
-    </tr>
-    <tr>
-      <td class="even"><a target="_blank" href="http://www.gpg4win.de/">Gpg4Win</a><br>
-      </td>
-      <td class="even">Eine
-Zusammenfassung der wichtigsten Tools zu einem Packet.
-Kann leicht in Windows installiert werden. Enthällt: GnuPG,
-WinPT,
-GPGRelay, einige Anleitungen.</td>
-      <td class="even">Windows</td>
-      <td class="even">GPL</td>
-      <td class="even">ENG,GER</td>
-    </tr>
-    <tr>
-      <td class="odd"><a target="_blank" href="http://gpa.wald.intevation.org/">GPA</a><br>
-      </td>
-      <td class="odd">Frontend
-für GnuPG, GTK.<br>
-      </td>
-      <td class="odd">Windows,
-Linux<br>
-      </td>
-      <td class="odd">GPL<br>
-      </td>
-      <td class="odd">GER,
-ENG<br>
-      </td>
-    </tr>
-    <tr>
-      <td class="even"><a target="_blank" href="http://seahorse.sf.net">Seahorse</a><br>
-      </td>
-      <td class="even">Frontend
-für GnuPG, Gnome, noch nicht alle Features aber
-guter Ansatz.<br>
-      </td>
-      <td class="even">Linux
-(Gnome)<br>
-      </td>
-      <td class="even">GPL<br>
-      </td>
-      <td class="even">Viele<br>
-      </td>
-    </tr>
-    <tr>
-      <td class="odd"><a target="_blank" href="http://www.truecrypt.org/">TrueCrypt</a><br>
-      </td>
-      <td class="odd">Verschlüsselung
-von ganzen Partitionen oder anlegen von verschlüsselten Laufwerken in
-einzelnen Dateien. Ähnlich Crosscrypt siehe weiter unten.<br>
-      </td>
-      <td class="odd">Windows<br>
-      </td>
-      <td class="odd">Truecrypt License<br>
-      </td>
-      <td class="odd">GER,
-ENG, FRA<br>
-      </td>
-    </tr>
-    <tr>
-      <td class="even"><a target="_blank" href="http://sites.inka.de/tesla/gpgrelay.html">GPGRelay</a><br>
-      </td>
-      <td class="even">Ein
-Proxy für E-Mail Clients, die nicht mit
-verschlüsselten Nachrichten umgehen können.
-Verschlüsselt und entschlüsselt automatisch
-empfangene und
-versendete Nachrichten. SMTP, POP3.<br>
-      </td>
-      <td class="even">Windows<br>
-      </td>
-      <td class="even">GPL<br>
-      </td>
-      <td class="even">ENG,
-GER, JAP, IT, KOR<br>
-      </td>
-    </tr>
-    <tr>
-      <td class="odd"><a target="_blank" href="http://www.scherrer.cc/crypt/">Crosscrypt</a><br>
-      </td>
-      <td class="odd">Bereitstellung
-von verschlüsselten Laufwerken. Diese werden in Dateien
-abgelegt. Nur Konsole.<br>
-      <ul>
-        <li>Starke
-Verschlüsselung: /aes256, /aes192, /aes128 (SingleKey Mode
-aes-loop compatible) and TwoFish (Use /2f) (160 Bit Key) (SuSE Linux
-compatible)</li>
-        <li>Verschlüsselte
-Datei sieht aus als sei sie eine ganz normale Daten-Datei eines
-beliebigen Programms.<br>
-        </li>
-        <li>Unterstützt
-verschlüsselte CD-ROMs<br>
-        </li>
-        <li>Unterstützt
-große Dateisysteme, theoretisch größer als
-9.000.000 GB (abhängig vom eigenen Dateisystem) </li>
-        <li>Keine backdoors. Kein
-Masterkey.</li>
-      </ul>
-      </td>
-      <td class="odd">Windows
-2000, XP<br>
-      </td>
-      <td class="odd">GPL<br>
-      </td>
-      <td class="odd">ENG<br>
-      </td>
-    </tr>
-    <tr>
-      <td class="even"><a target="_blank" href="http://www.fortunecity.com/skyscraper/true/882/CrossCryptGUI.htm">Crosscrypt
-GUI</a><br>
-      </td>
-      <td class="even">Einfaches
-grafisches Frontend für Crosscrypt.<br>
-      </td>
-      <td class="even">Windows<br>
-      </td>
-      <td class="even">Freeware<br>
-      </td>
-      <td class="even">ENG<br>
-      </td>
-    </tr>
-    <tr>
-      <td class="odd"><a target="_blank" href="http://www.jumaros.de/rsoft/index.html">GPGShell</a><br>
-      </td>
-      <td class="odd">Grafisches
-Frontend für GnuPG.<br>
-      </td>
-      <td class="odd">Windows<br>
-      </td>
-      <td class="odd">Freeware<br>
-      </td>
-      <td class="odd">Viele<br>
-      </td>
-    </tr>
-    <tr>
-      <td class="even"><a target="_blank" href="https://www.ciphirebeta.com/">Ciphire</a><br>
-      </td>
-      <td class="even">Verschlüsselt E-Mails automatisch ohne
-weitere Konfiguration, noch nie probiert....<br>
-      </td>
-      <td class="even">Windows, MacOS X, Linux<br>
-      </td>
-      <td class="even">Freeware<br>
-      </td>
-      <td class="even">ENG<br>
-      </td>
-    </tr>
-  </tbody>
-</table>
-<h2>Plugins</h2>
-<table style="width: 100%; text-align: left;" border="0" cellpadding="2" cellspacing="2">
-  <tbody>
-    <tr>
-      <th>Name<br>
-      </th>
-      <th>Beschreibung<br>
-      </th>
-      <th>OS<br>
-      </th>
-      <th>Lizenz<br>
-      </th>
-      <th>Sprache<br>
-      </th>
-    </tr>
-    <tr>
-      <td><a target="_blank" href="http://www3.gdata.de/gpg/">GData
-Outlook Plugin</a><br>
-      </td>
-      <td>GnuPG Plugin
-für Outlook. (Outdated, use GPGOL below instead)<br>
-      </td>
-      <td>Windows<br>
-      </td>
-      <td>Open Source, Kostenlos<br>
-      </td>
-      <td>GER, ENG<br>
-      </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;"><a href="http://www.g10code.com/p-gpgol.html" target="_blank">GPGOL Outlook Plugin</a><br>
-      </td>
-      <td style="vertical-align: top;">GnuPG Plugin für Outlook<br>
-      </td>
-      <td style="vertical-align: top;">Windows<br>
-      </td>
-      <td style="vertical-align: top;">GPL<br>
-      </td>
-      <td style="vertical-align: top;">ENG<br>
-      </td>
-    </tr>
-<tr>
-      <td><a target="_blank" href="http://enigmail.mozdev.org/">Enigmail</a>
-      </td>
-      <td>GnuPG Plugin
-für Thunderbird, Mozilla und Netscape<br>
-      </td>
-      <td>Windows, Linux<br>
-      </td>
-      <td>GPL,
-MPL<br>
-      </td>
-      <td>Viele</td>
-    </tr>
-    <tr>
-      <td><a target="_blank" href="http://www.miranda-im.org/download/details.php?action=viewfile&amp;id=216">Miranda-IM
-Plugin</a><br>
-      </td>
-      <td>GnuPG Plugin für Miranda Instant Messenger<br>
-      </td>
-      <td>Windows<br>
-      </td>
-      <td>Freeware<br>
-      </td>
-      <td>Viele<br>
-      </td>
-    </tr>
-    <tr>
-      <td><a target="_blank" href="http://gaim-e.sourceforge.net/">Gaim-E</a><br>
-      </td>
-      <td>GnuPG Plugin für Gaim. Im Moment leider ohne aktiven
-Maintainer.<br>
-      </td>
-      <td>Linux<br>
-      </td>
-      <td>GPL<br>
-      </td>
-      <td>ENG<br>
-      </td>
-    </tr><tr><td><a href="http://www.cypherpunks.ca/otr/" target="_blank">OTR</a></td><td>Off
-the record messaging, System um Instant Messaging Systeme End zu End zu
-verschlüsslen, einfach konfigurierbar, benötigt kein GnuPG, Plugins für
-Pidgin, Miranda, Psi, ... erhältlich. Nicht unterstützte Messenger
-können mit einem Proxy zur Zusammenarbeit bewegt werden. Vorteil bei
-OTR gegenüber anderer Verschlüsselung ist das beständige Ändern der
-Schlüssel.</td><td>Windows,Linux</td><td>GPL</td><td>ENG</td></tr><tr><td><a href="http://pidgin-encrypt.sourceforge.net/" target="_blank">Pidgin-Encryption</a></td><td>RSA Verschlüsselung für Pidgin-Messenger</td><td>Windows, Linux</td><td>GPL</td><td>ENG</td></tr>
-  </tbody>
-</table>
-<h2>Links</h2>
-<ul>
-  <li><a target="_blank" href="http://php.ch-becker.de/how2/winpt/">Anleitung
-Verschlüsselte E-Mails GnuPG, WinPT, Thunderbird</a>
-(deutsch)</li>
-  <li><a target="_blank" href="http://www.jfrisch.de/GPG-Install/index.html">Anleitung
-zur
-GnuPG Installation</a> (deutsch)<br>
-  </li>
-  <li><a target="_blank" href="http://www.gnupp.de">Gute
-Einführung in die Materie</a>
-(deutsch)</li>
-  <li><a target="_blank" href="http://hp.kairaven.de/">The
-Raven
-Homepage</a> (deutsch) Anleitungen,
-Artikel über Zensur, Big
-Brother, etc...<br>
-  </li>
-  <li>Übrigends, wer mir
-eine verschlüsselte Mail schicken
-will für den hab ich hier <a href="key.pub">meinen
-öffentlichen GnuPG
-Key</a>.</li>
-</ul><h1>Verschlüsselung (Zertifikate)</h1>Eine weitere Art der
-Verschlüsselung ist die mit Zertifikaten. Hier gibt es immer eine
-zentrale Vergabestellen von sogenannten "Zertifikaten". Diese stellt
-die Identität einer Person fest und vergibt dann ein Zertifikat an den
-betreffenden. Es gibt natürlich viele Zertifizierungsstellen weltweit,
-z.B.: <a href="http://www.thawte.com/" target="_blank">Thawte</a>, <a href="http://www.verisign.com/" target="_blank">Verisign</a>,
-&nbsp;.. etc. Sogar der Staat vergibt Zertifikate in Form der
-Bürgerkarte (Österreich). Zertifikate für den privaten Gebrauch sind
-hier meist frei zu erhalten. Jedoch gibt es auch eine Möglichkeit
-Zertifikate zu erhalten die aus der Community stammt: <a href="http://www.cacert.org/" target="_blank">CACert.org</a>.<br>Bei
-CACert kann sich jeder selbst Zertifikate erstellen. Zuerst sind diese
-aber nicht beglaubigt, dass heißt es lässt sich mit diesen Zertifikaten
-nicht feststellen ob die Person, der das Zertifikat gehört wirklich die
-ist, die sie vorgibt zu sein. Doch wie läuft dann die Prüfung der neuen
-Teilnehmer hier ab, wenn es doch keine zentrale Vergabestelle gibt?
-Nun, jeder Teilnehmer der schon volles Mitglied ist (genügend Punkte
-besitzt) kann andere Leute beglaubigen (das heißt Punkte an sie
-vergeben). Hat man selbst durch eine Folge von Beglaubigungen durch
-andere Leute genügend Punkte erreicht, kann man selbst wiederrum
-Beglaubigungen an neue Teilnehmer vergeben. Ab 50 Punkte gelten die
-eigenen Zertifikate als voll beglaubigt und ab 100 Punkten kann man
-selbst andere Teilnehmer beglaubigen.<br>Kennt man niemanden, der genug
-Punkte besitzt um jemanden beglaubigen zu können, gibt es eine
-lokalisierte Liste von Leuten mit genügend Punkten auf der Homepage von
-CACert. Diese sind gerne bereit neue Leute zu beglaubigen, da sie
-dadurch mehr als 100 Punkte bekommen können (2 Punkte für jede
-Beglaubigung).<br><h3>Vorteile der Zertifikatsmethode:</h3><ul><li>Es
-werden keine separaten Programme wie bei Public/Private Key Verfahren
-üblich benötigt, da alle gebräucllichen E-Mail Clients wie Outlook,
-Thunderbird, ...mit Zertifikaten umgehen können.</li><li>Man vertraut
-nicht dem eigenen Web-of-Trust wie beim Public/Private Key Verfahren,
-sonderen dem Aussteller der die Teilnehmer beglaubigt hat und somit
-allen beglaubigten Teilnehmern. Das heißt : bekomme ich eine signierte
-E-Mail von einer mir gänzlich unbekannten (also auch nicht über andere
-Bekannte bekannte Teilnehmer) Person die von einer
-Zertifizierungsstelle beglaubigt worden ist, kann ich darauf vertrauen,
-dass die Person auch die Person ist, die sie vorgibt zu sein.
-(Natürlich muss ich der Zertifizierungsstelle vertrauen, im Fall von
-CACert muss ich natürlich der Community vertrauen).</li><li>Verteilen
-des Public Keys an die Empfänger entfällt, da jeder E-Mail Client mit
-den Zertifikaten der gängigen Zertifikatsaussteller ausgestattet ist
-und jedes Zertifikat mittels diesen sogenannten Rootzertifikaten
-überprüft werden kann. (leider noch nicht gültig für CACert,
-Root-Zertifikat kann aber leicht von CACert Homepage installiert
-werden.)</li></ul><h3>Nachteile:</h3><ul><li>Nicht immer kostenfrei (außer manchmal für Privat oder CACert)</li><li>NUR CACert: Teilnehmer die sich gegenseitig Punkte geben und so tun könnte was sie will.</li></ul>
-</body></html>
+  <link title="Default" rel="stylesheet" href="styles/default.css" type="text/css">
+</head>
+
+<body>
+  <h1>Verschlüsselung (Private/Public Key Verfahren)</h1>
+  Eine der finde ich besten Methoden etwas zu verschlüsseln ist
+  es, nicht symetrische Schlüssel zu verwenden. Hier einige
+  Programme dazu. Der Grund ist, dass die Schlüsselverwaltung nicht
+  zentral, zB vom Staat oder einem Unternehmen erledigt wird, sondern
+  jeder seinen eigenen Schlüssel (in Wirklichkeit ein
+  Schlüsselpaar) erzeugen kann. Dies hört sich vielleicht
+  anfangs etwas unsicher an, ist aber bei näherer Betrachtung die
+  Fortsetzung des Postgeheimnisses im Internet!<br>
+  Eine E-Mail kann auf dem Weg zum Empfänger abgefangen werden. Ist
+  diese jedoch verschlüsselt, kann der Spion nichts damit anfangen.
+  Nur der richtige Empfänger kann diese E-Mail je wieder
+  entschlüsseln. (Ja ich weiß, wenn ich 100000 Jahre Zeit hab,
+  dann kann ich sie auch ohne Schlüssel entschlüsseln, aber wer
+  hat das schon ;-)<br>
+  <h2>Programme</h2>
+  <table style="width: 100%; text-align: left;" border="0" cellpadding="2" cellspacing="2">
+    <tbody>
+      <tr>
+        <th>Name<br>
+        </th>
+        <th>Beschreibung<br>
+        </th>
+        <th>OS<br>
+        </th>
+        <th>Lizenz<br>
+        </th>
+        <th>Sprache<br>
+        </th>
+      </tr>
+      <tr>
+        <td class="odd"><a target="_blank" href="http://gnupg.org">GnuPG</a><br>
+        </td>
+        <td class="odd">Eine
+          freie Alternative zu PGP. Es beinhaltet nur
+          Kommandozeilenprogramme. Grafische Frontends gibt es extra. (Weiter
+          unten auf der Seite, z.B.: GPA, WinPT)<br>
+        </td>
+        <td class="odd">Linux,
+          FreeBSD, OpenBSD, NetBSD, Windows 95/98/NT/2000/ME/XP,
+          Pocket PC, MacOS X </td>
+        <td class="odd">GPL<br>
+        </td>
+        <td class="odd">GER,
+          ENG, FRA<br>
+        </td>
+      </tr>
+      <tr>
+        <td class="even"><a target="_blank" href="http://www.pgp.com">PGP</a><br>
+        </td>
+        <td class="even">Dieses
+          war das erste Programm, das sich mit dem Problem der
+          Verschlüsselung von Nachrichten speziell für Private
+          befasste. Wurde aber von einer Firma gekauft. Diese bietet zwar eine
+          Freeware Version für Private an, diese sollte jedoch nicht
+          mehr
+          verwendet verden weil es bessere/freie/OpenSource Alternativen (GnuPG)
+          gibt. Außerdem garantiert der ursprüngliche
+          Initiator des
+          Programms in der derzeitigen Version nicht mehr für die
+          Sicherheit
+          des einzelnen (Drittschlüssel). Ich führe es hier nur
+          der
+          Vollständigkeit halber an.</td>
+        <td class="even">Windows</td>
+        <td class="even">Freeware für Private</td>
+        <td class="even">ENG,GER</td>
+      </tr>
+      <tr>
+        <td class="odd"><a target="_blank" href="http://www.gnupt.de/wp/">WinPT</a></td>
+        <td class="odd">Ein guter Frontend für GnuPG. Die Seite beinhaltet auch ein paar schöne Einführungsvideos.</td>
+        <td class="odd">Windows</td>
+        <td class="odd">GPL</td>
+        <td class="odd">ENG, GER</td>
+      </tr>
+      <tr>
+        <td class="even"><a target="_blank" href="http://www.gpg4win.de/">Gpg4Win</a><br>
+        </td>
+        <td class="even">Eine
+          Zusammenfassung der wichtigsten Tools zu einem Packet.
+          Kann leicht in Windows installiert werden. Enthällt: GnuPG,
+          WinPT,
+          GPGRelay, einige Anleitungen.</td>
+        <td class="even">Windows</td>
+        <td class="even">GPL</td>
+        <td class="even">ENG,GER</td>
+      </tr>
+      <tr>
+        <td class="odd"><a target="_blank" href="http://gpa.wald.intevation.org/">GPA</a><br>
+        </td>
+        <td class="odd">Frontend
+          für GnuPG, GTK.<br>
+        </td>
+        <td class="odd">Windows,
+          Linux<br>
+        </td>
+        <td class="odd">GPL<br>
+        </td>
+        <td class="odd">GER,
+          ENG<br>
+        </td>
+      </tr>
+      <tr>
+        <td class="even"><a target="_blank" href="http://seahorse.sf.net">Seahorse</a><br>
+        </td>
+        <td class="even">Frontend
+          für GnuPG, Gnome, noch nicht alle Features aber
+          guter Ansatz.<br>
+        </td>
+        <td class="even">Linux
+          (Gnome)<br>
+        </td>
+        <td class="even">GPL<br>
+        </td>
+        <td class="even">Viele<br>
+        </td>
+      </tr>
+      <tr>
+        <td class="odd"><a target="_blank" href="http://www.truecrypt.org/">TrueCrypt</a><br>
+        </td>
+        <td class="odd">Verschlüsselung
+          von ganzen Partitionen oder anlegen von verschlüsselten Laufwerken in
+          einzelnen Dateien. Ähnlich Crosscrypt siehe weiter unten.<br>
+        </td>
+        <td class="odd">Windows<br>
+        </td>
+        <td class="odd">Truecrypt License<br>
+        </td>
+        <td class="odd">GER,
+          ENG, FRA<br>
+        </td>
+      </tr>
+      <tr>
+        <td class="even"><a target="_blank" href="http://sites.inka.de/tesla/gpgrelay.html">GPGRelay</a><br>
+        </td>
+        <td class="even">Ein
+          Proxy für E-Mail Clients, die nicht mit
+          verschlüsselten Nachrichten umgehen können.
+          Verschlüsselt und entschlüsselt automatisch
+          empfangene und
+          versendete Nachrichten. SMTP, POP3.<br>
+        </td>
+        <td class="even">Windows<br>
+        </td>
+        <td class="even">GPL<br>
+        </td>
+        <td class="even">ENG,
+          GER, JAP, IT, KOR<br>
+        </td>
+      </tr>
+      <tr>
+        <td class="odd"><a target="_blank" href="http://www.scherrer.cc/crypt/">Crosscrypt</a><br>
+        </td>
+        <td class="odd">Bereitstellung
+          von verschlüsselten Laufwerken. Diese werden in Dateien
+          abgelegt. Nur Konsole.<br>
+          <ul>
+            <li>Starke
+              Verschlüsselung: /aes256, /aes192, /aes128 (SingleKey Mode
+              aes-loop compatible) and TwoFish (Use /2f) (160 Bit Key) (SuSE Linux
+              compatible)</li>
+            <li>Verschlüsselte
+              Datei sieht aus als sei sie eine ganz normale Daten-Datei eines
+              beliebigen Programms.<br>
+            </li>
+            <li>Unterstützt
+              verschlüsselte CD-ROMs<br>
+            </li>
+            <li>Unterstützt
+              große Dateisysteme, theoretisch größer als
+              9.000.000 GB (abhängig vom eigenen Dateisystem) </li>
+            <li>Keine backdoors. Kein
+              Masterkey.</li>
+          </ul>
+        </td>
+        <td class="odd">Windows
+          2000, XP<br>
+        </td>
+        <td class="odd">GPL<br>
+        </td>
+        <td class="odd">ENG<br>
+        </td>
+      </tr>
+      <tr>
+        <td class="even"><a target="_blank"
+            href="http://www.fortunecity.com/skyscraper/true/882/CrossCryptGUI.htm">Crosscrypt
+            GUI</a><br>
+        </td>
+        <td class="even">Einfaches
+          grafisches Frontend für Crosscrypt.<br>
+        </td>
+        <td class="even">Windows<br>
+        </td>
+        <td class="even">Freeware<br>
+        </td>
+        <td class="even">ENG<br>
+        </td>
+      </tr>
+      <tr>
+        <td class="odd"><a target="_blank" href="http://www.jumaros.de/rsoft/index.html">GPGShell</a><br>
+        </td>
+        <td class="odd">Grafisches
+          Frontend für GnuPG.<br>
+        </td>
+        <td class="odd">Windows<br>
+        </td>
+        <td class="odd">Freeware<br>
+        </td>
+        <td class="odd">Viele<br>
+        </td>
+      </tr>
+      <tr>
+        <td class="even"><a target="_blank" href="https://www.ciphirebeta.com/">Ciphire</a><br>
+        </td>
+        <td class="even">Verschlüsselt E-Mails automatisch ohne
+          weitere Konfiguration, noch nie probiert....<br>
+        </td>
+        <td class="even">Windows, MacOS X, Linux<br>
+        </td>
+        <td class="even">Freeware<br>
+        </td>
+        <td class="even">ENG<br>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <h2>Plugins</h2>
+  <table style="width: 100%; text-align: left;" border="0" cellpadding="2" cellspacing="2">
+    <tbody>
+      <tr>
+        <th>Name<br>
+        </th>
+        <th>Beschreibung<br>
+        </th>
+        <th>OS<br>
+        </th>
+        <th>Lizenz<br>
+        </th>
+        <th>Sprache<br>
+        </th>
+      </tr>
+      <tr>
+        <td><a target="_blank" href="http://www3.gdata.de/gpg/">GData
+            Outlook Plugin</a><br>
+        </td>
+        <td>GnuPG Plugin
+          für Outlook. (Outdated, use GPGOL below instead)<br>
+        </td>
+        <td>Windows<br>
+        </td>
+        <td>Open Source, Kostenlos<br>
+        </td>
+        <td>GER, ENG<br>
+        </td>
+      </tr>
+      <tr>
+        <td style="vertical-align: top;"><a href="http://www.g10code.com/p-gpgol.html" target="_blank">GPGOL Outlook
+            Plugin</a><br>
+        </td>
+        <td style="vertical-align: top;">GnuPG Plugin für Outlook<br>
+        </td>
+        <td style="vertical-align: top;">Windows<br>
+        </td>
+        <td style="vertical-align: top;">GPL<br>
+        </td>
+        <td style="vertical-align: top;">ENG<br>
+        </td>
+      </tr>
+      <tr>
+        <td><a target="_blank" href="http://enigmail.mozdev.org/">Enigmail</a>
+        </td>
+        <td>GnuPG Plugin
+          für Thunderbird, Mozilla und Netscape<br>
+        </td>
+        <td>Windows, Linux<br>
+        </td>
+        <td>GPL,
+          MPL<br>
+        </td>
+        <td>Viele</td>
+      </tr>
+      <tr>
+        <td><a target="_blank"
+            href="http://www.miranda-im.org/download/details.php?action=viewfile&amp;id=216">Miranda-IM
+            Plugin</a><br>
+        </td>
+        <td>GnuPG Plugin für Miranda Instant Messenger<br>
+        </td>
+        <td>Windows<br>
+        </td>
+        <td>Freeware<br>
+        </td>
+        <td>Viele<br>
+        </td>
+      </tr>
+      <tr>
+        <td><a target="_blank" href="http://gaim-e.sourceforge.net/">Gaim-E</a><br>
+        </td>
+        <td>GnuPG Plugin für Gaim. Im Moment leider ohne aktiven
+          Maintainer.<br>
+        </td>
+        <td>Linux<br>
+        </td>
+        <td>GPL<br>
+        </td>
+        <td>ENG<br>
+        </td>
+      </tr>
+      <tr>
+        <td><a href="http://www.cypherpunks.ca/otr/" target="_blank">OTR</a></td>
+        <td>Off
+          the record messaging, System um Instant Messaging Systeme End zu End zu
+          verschlüsslen, einfach konfigurierbar, benötigt kein GnuPG, Plugins für
+          Pidgin, Miranda, Psi, ... erhältlich. Nicht unterstützte Messenger
+          können mit einem Proxy zur Zusammenarbeit bewegt werden. Vorteil bei
+          OTR gegenüber anderer Verschlüsselung ist das beständige Ändern der
+          Schlüssel.</td>
+        <td>Windows,Linux</td>
+        <td>GPL</td>
+        <td>ENG</td>
+      </tr>
+      <tr>
+        <td><a href="http://pidgin-encrypt.sourceforge.net/" target="_blank">Pidgin-Encryption</a></td>
+        <td>RSA Verschlüsselung für Pidgin-Messenger</td>
+        <td>Windows, Linux</td>
+        <td>GPL</td>
+        <td>ENG</td>
+      </tr>
+    </tbody>
+  </table>
+  <h2>Links</h2>
+  <ul>
+    <li><a target="_blank" href="http://php.ch-becker.de/how2/winpt/">Anleitung
+        Verschlüsselte E-Mails GnuPG, WinPT, Thunderbird</a>
+      (deutsch)</li>
+    <li><a target="_blank" href="http://www.jfrisch.de/GPG-Install/index.html">Anleitung
+        zur
+        GnuPG Installation</a> (deutsch)<br>
+    </li>
+    <li><a target="_blank" href="http://www.gnupp.de">Gute
+        Einführung in die Materie</a>
+      (deutsch)</li>
+    <li><a target="_blank" href="http://hp.kairaven.de/">The
+        Raven
+        Homepage</a> (deutsch) Anleitungen,
+      Artikel über Zensur, Big
+      Brother, etc...<br>
+    </li>
+    <li>Übrigends, wer mir
+      eine verschlüsselte Mail schicken
+      will für den hab ich hier <a href="key.pub">meinen
+        öffentlichen GnuPG
+        Key</a>.</li>
+  </ul>
+  <h1>Verschlüsselung (Zertifikate)</h1>Eine weitere Art der
+  Verschlüsselung ist die mit Zertifikaten. Hier gibt es immer eine
+  zentrale Vergabestellen von sogenannten "Zertifikaten". Diese stellt
+  die Identität einer Person fest und vergibt dann ein Zertifikat an den
+  betreffenden. Es gibt natürlich viele Zertifizierungsstellen weltweit,
+  z.B.: <a href="http://www.thawte.com/" target="_blank">Thawte</a>, <a href="http://www.verisign.com/"
+    target="_blank">Verisign</a>,
+  &nbsp;.. etc. Sogar der Staat vergibt Zertifikate in Form der
+  Bürgerkarte (Österreich). Zertifikate für den privaten Gebrauch sind
+  hier meist frei zu erhalten. Jedoch gibt es auch eine Möglichkeit
+  Zertifikate zu erhalten die aus der Community stammt: <a href="http://www.cacert.org/"
+    target="_blank">CACert.org</a>.<br>Bei
+  CACert kann sich jeder selbst Zertifikate erstellen. Zuerst sind diese
+  aber nicht beglaubigt, dass heißt es lässt sich mit diesen Zertifikaten
+  nicht feststellen ob die Person, der das Zertifikat gehört wirklich die
+  ist, die sie vorgibt zu sein. Doch wie läuft dann die Prüfung der neuen
+  Teilnehmer hier ab, wenn es doch keine zentrale Vergabestelle gibt?
+  Nun, jeder Teilnehmer der schon volles Mitglied ist (genügend Punkte
+  besitzt) kann andere Leute beglaubigen (das heißt Punkte an sie
+  vergeben). Hat man selbst durch eine Folge von Beglaubigungen durch
+  andere Leute genügend Punkte erreicht, kann man selbst wiederrum
+  Beglaubigungen an neue Teilnehmer vergeben. Ab 50 Punkte gelten die
+  eigenen Zertifikate als voll beglaubigt und ab 100 Punkten kann man
+  selbst andere Teilnehmer beglaubigen.<br>Kennt man niemanden, der genug
+  Punkte besitzt um jemanden beglaubigen zu können, gibt es eine
+  lokalisierte Liste von Leuten mit genügend Punkten auf der Homepage von
+  CACert. Diese sind gerne bereit neue Leute zu beglaubigen, da sie
+  dadurch mehr als 100 Punkte bekommen können (2 Punkte für jede
+  Beglaubigung).<br>
+  <h3>Vorteile der Zertifikatsmethode:</h3>
+  <ul>
+    <li>Es
+      werden keine separaten Programme wie bei Public/Private Key Verfahren
+      üblich benötigt, da alle gebräucllichen E-Mail Clients wie Outlook,
+      Thunderbird, ...mit Zertifikaten umgehen können.</li>
+    <li>Man vertraut
+      nicht dem eigenen Web-of-Trust wie beim Public/Private Key Verfahren,
+      sonderen dem Aussteller der die Teilnehmer beglaubigt hat und somit
+      allen beglaubigten Teilnehmern. Das heißt : bekomme ich eine signierte
+      E-Mail von einer mir gänzlich unbekannten (also auch nicht über andere
+      Bekannte bekannte Teilnehmer) Person die von einer
+      Zertifizierungsstelle beglaubigt worden ist, kann ich darauf vertrauen,
+      dass die Person auch die Person ist, die sie vorgibt zu sein.
+      (Natürlich muss ich der Zertifizierungsstelle vertrauen, im Fall von
+      CACert muss ich natürlich der Community vertrauen).</li>
+    <li>Verteilen
+      des Public Keys an die Empfänger entfällt, da jeder E-Mail Client mit
+      den Zertifikaten der gängigen Zertifikatsaussteller ausgestattet ist
+      und jedes Zertifikat mittels diesen sogenannten Rootzertifikaten
+      überprüft werden kann. (leider noch nicht gültig für CACert,
+      Root-Zertifikat kann aber leicht von CACert Homepage installiert
+      werden.)</li>
+  </ul>
+  <h3>Nachteile:</h3>
+  <ul>
+    <li>Nicht immer kostenfrei (außer manchmal für Privat oder CACert)</li>
+    <li>NUR CACert: Teilnehmer die sich gegenseitig Punkte geben und so tun könnte was sie will.</li>
+  </ul>
+</body>
+
+</html>
